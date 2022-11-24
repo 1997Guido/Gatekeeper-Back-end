@@ -5,3 +5,9 @@ gatekeeper_backend/api/functions/__pycache__/ProfileLogic.cpython-311.pyc
 gatekeeper_backend/api/functions/__pycache__/QrCodeGenerator.cpython-311.pyc
 gatekeeper_backend/api/functions/__pycache__/QrCodeScanner.cpython-311.pyc
 gatekeeper_backend/api/functions/__pycache__/RegisterLogic.cpython-311.pyc
+gatekeeper_backend/api/functions/__pycache__/ProfileLogic.cpython-311.pyc
+gatekeeper_backend/api/functions/__pycache__/QrCodeGenerator.cpython-311.pyc
+gatekeeper_backend/api/functions/__pycache__/QrCodeScanner.cpython-311.pyc
+gatekeeper_backend/api/functions/__pycache__/RegisterLogic.cpython-311.pyc
+gatekeeper_backend/gatekeeper_backend/__pycache__/__init__.cpython-311.pyc
+gatekeeper_backend/gatekeeper_backend/__pycache__/wsgi.cpython-311.pyc
