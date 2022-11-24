@@ -2,8 +2,6 @@ from .QrCodeGenerator import QrCodeGenerator
 
 
 
-def RegisterLogic():
-    name = 'guido'
-    QrCode = QrCodeGenerator()
-    outcomeFunction = 'RegisterLogic'
+def RegisterLogic(request):
+    jsonData = request.body.get
     return (QrCode)
