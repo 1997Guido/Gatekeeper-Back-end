@@ -2,18 +2,10 @@ from django.db import models
 import string
 import random
 
-def generate_unique_id():
-    length = 8
-    
-    while True:
-        uid = ''.join(random.choices(string.ascii_uppercase, k=length))
-        if Users.objects.filter(uid=uid).count() == 0:
-            break
-        
-    return uid
 
+#This is the model for our Database
+#Users is the main database the others use its primary key as foreignkey(Many to One)
 
-# Create your models here.
 class Users(models.Model):
     class Meta:  
         verbose_name_plural = 'Users'
@@ -30,4 +22,13 @@ class Users(models.Model):
     admin = models.BooleanField(default=False, null=False)
     def __str__(self):
         return self.last_name
+
+
+class QrCode(models.Model):
+        class Meta:  
+            verbose_name_plural = 'QrCodes'
+        user_id = models.ForeignKey(Users, on_delete=models.CASCADE)
+        QrUid = models.CharField(max_length=8, null=False)
+        
+
     
