@@ -6,7 +6,7 @@ from django.http import HttpResponse
 from .functions.RegisterLogic import RegisterLogic
 from .functions.ProfileLogic import ProfileLogic
 from .functions.QrCodeGenerator import QrCodeGenerator
-from . functions.QrCodeScanner import QrCodeScanner
+from .functions.QrCodeScanner import QrCodeScanner
 
 # Create your views here.
 
