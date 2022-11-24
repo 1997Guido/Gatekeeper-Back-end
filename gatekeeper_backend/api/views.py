@@ -8,7 +8,7 @@ from .functions.ProfileLogic import ProfileLogic
 from .functions.QrCodeGenerator import QrCodeGenerator
 from .functions.QrCodeScanner import QrCodeScanner
 
-# Create your views here.
+# These are views(functions) which are ran when the frontend calls their specified paths(in urls.py)
 
 class UsersView(generics.ListAPIView):
     queryset = Users.objects.all()
