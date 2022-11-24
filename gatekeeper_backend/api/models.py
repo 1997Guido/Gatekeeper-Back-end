@@ -15,9 +15,19 @@ def generate_unique_id():
 
 # Create your models here.
 class Users(models.Model):
-    first_name = models.CharField(max_length=32, default="")
-    last_name = models.CharField(max_length=64, default="")
-    age = models.IntegerField((""))
-    date_created = models.DateField(auto_now_add=True)
-    admin = models.BooleanField(default=False)
+    class Meta:  
+        verbose_name_plural = 'Users'
+    GENDER_CHOICES = (
+    ('M', 'Male'),
+    ('F', 'Female')
+    )
+    emailadress = models.CharField(max_length=32, null=False)
+    gender = models.CharField(max_length=1, choices=GENDER_CHOICES, default=False, null=False)
+    first_name = models.CharField(max_length=32, null=False)
+    last_name = models.CharField(max_length=64, null=False)
+    age = models.IntegerField(null=False)
+    date_created = models.DateField(auto_now_add=True, null=False)
+    admin = models.BooleanField(default=False, null=False)
+    def __str__(self):
+        return self.last_name
     
