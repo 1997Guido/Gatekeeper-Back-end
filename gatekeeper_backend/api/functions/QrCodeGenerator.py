@@ -1,7 +1,11 @@
 from ..models import QrCode
 from ..models import Users
 import json
-import random, string, base64
+import random, string, base64, os
+import cryptography
+from cryptography.fernet import Fernet
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
 def generate_unique_id():
     length = 8
@@ -13,7 +17,7 @@ def generate_unique_id():
         
     return uid
 
-def QrCodeGenerator(UserData):
+def QrCodeGenerator():
     UserData = {
         "first_name" : "Mike",
         "last_name" : "Vermeer",
@@ -26,10 +30,11 @@ def QrCodeGenerator(UserData):
     UserData["uid"] = generate_unique_id()
     
     UserDataJson = json.dumps(UserData, ensure_ascii=False)
-    UserData_bytes = UserDataJson.encode('ascii')
-    base64_bytes = base64.b64encode(UserData_bytes)
-    base64_UserData = base64_bytes.decode('ascii')
 
+    key = "rTFB13nkI4mt76RMiJOpoNZS_aa5LUNyJIJ4BPlbPEY="
+    f = Fernet(key)
+    temp = "\n " #For testing purposes
     
+    UserDataEncrypted = f.encrypt(UserDataJson.encode())
     
-    return (UserDataJson, base64_UserData)
+    return (UserDataJson, temp, UserDataEncrypted)
