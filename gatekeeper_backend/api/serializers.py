@@ -1,8 +1,8 @@
 from rest_framework import serializers
-from .models import Users
+from .models import UserProfile
 
-class UserSerializer(serializers.ModelSerializer):
+class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Users
+        model = UserProfile
         fields = ('id', 'first_name', 'last_name', 'age', 'date_created', 'admin')
 

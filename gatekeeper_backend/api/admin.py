@@ -1,11 +1,10 @@
 from django.contrib import admin
-from .models import Users
+from .models import UserProfile
 from .models import QrCode
 
-
-class UsersAdmin(admin.ModelAdmin):
+class UserProfileAdmin(admin.ModelAdmin):
     readonly_fields = ('id',)
 
 # Register your models here.
 admin.site.register(QrCode)
-admin.site.register(Users, UsersAdmin)
+admin.site.register(UserProfile, UserProfileAdmin)

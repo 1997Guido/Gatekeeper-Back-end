@@ -1,12 +1,13 @@
 from django.db import models
 import string
 import random
-
+from django import forms
+from django.contrib.auth.models import AbstractUser
 
 #This is the model for our Database
 #Users is the main database the others use its primary key as foreignkey(Many to One)
 
-class Users(models.Model):
+class UserProfile(models.Model):
     class Meta:  
         verbose_name_plural = 'Users'
     GENDER_CHOICES = (
@@ -27,8 +28,5 @@ class Users(models.Model):
 class QrCode(models.Model):
         class Meta:  
             verbose_name_plural = 'QrCodes'
-        user_id = models.ForeignKey(Users, on_delete=models.CASCADE)
+        user_id = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
         QrUid = models.CharField(max_length=8, null=False)
-        
-
-    
