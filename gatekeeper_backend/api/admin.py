@@ -1,10 +1,27 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
+
 from .models import UserProfile
-from .models import QrCode
 
-class UserProfileAdmin(admin.ModelAdmin):
+#With list_display u can configure which fields should be shown when looking at a list of records in the User table
+#This class edits the admin panel so it also shows our custom fields. this happens at 'fields'
+
+
+class CustomUserAdmin(UserAdmin):
+    list_display = ('username', 'email', 'first_name', 'last_name', 'id')
     readonly_fields = ('id',)
+    fieldsets = (
+        *UserAdmin.fieldsets,
+        (
+            'Additional Info',
+            {
+                'fields':(
+                    'age',
+                    'gender',
+                    'QrUid',
+                )
+            }
+        )
+    )
 
-# Register your models here.
-admin.site.register(QrCode)
-admin.site.register(UserProfile, UserProfileAdmin)
+admin.site.register(UserProfile, CustomUserAdmin)

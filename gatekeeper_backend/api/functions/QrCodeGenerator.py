@@ -1,4 +1,4 @@
-from ..models import QrCode
+from ..models import UserProfile
 import random, string
 
 
@@ -7,7 +7,7 @@ def generate_unique_id():
     
     while True:
         uid = ''.join(random.choices(string.ascii_uppercase, k=length))
-        if QrCode.objects.filter(QrUid=uid).count() == 0:
+        if UserProfile.objects.filter(QrUid=uid).count() == 0:
             break
         
     return uid

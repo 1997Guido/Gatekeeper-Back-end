@@ -5,27 +5,20 @@ from django import forms
 from django.contrib.auth.models import AbstractUser
 
 #This is the model for our Database
-#Users is the main database the others use its primary key as foreignkey(Many to One)
+#This is a custom user model which inherits most of its fields from the default UserModel created by Django.
+#Importing and using the AbstractUser 'functions' make this possible.
+#By using the default user model, u can use the built in authentication features(login etc..).
+#The code below are the 'custom' fields i added to the default user model.
+#Like age,gender and QrUid. the QrUid is the field for the unique id generated for each user in QrCodeGenerator.py
 
-class UserProfile(models.Model):
-    class Meta:  
-        verbose_name_plural = 'Users'
+class UserProfile(AbstractUser):
+    pass
     GENDER_CHOICES = (
     ('M', 'Male'),
     ('F', 'Female')
     )
-    emailadress = models.CharField(max_length=32, null=False)
+    age = models.PositiveIntegerField(null=False, default=0)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, default=False, null=False)
-    first_name = models.CharField(max_length=32, null=False)
-    last_name = models.CharField(max_length=64, null=False)
-    age = models.IntegerField(null=False)
-    date_created = models.DateField(auto_now_add=True, null=False)
+    QrUid = models.CharField(max_length=8,null=False, default=0)
     def __str__(self):
-        return self.last_name
-
-
-class QrCode(models.Model):
-        class Meta:  
-            verbose_name_plural = 'QrCodes'
-        user_id = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-        QrUid = models.CharField(max_length=8, null=False)
+        return self.username

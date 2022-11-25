@@ -1,7 +1,0 @@
-
-gatekeeper_backend/api/__pycache__/urls.cpython-311.pyc
-gatekeeper_backend/api/__pycache__/views.cpython-311.pyc
-gatekeeper_backend/api/functions/__pycache__/ProfileLogic.cpython-311.pyc
-gatekeeper_backend/api/functions/__pycache__/QrCodeGenerator.cpython-311.pyc
-gatekeeper_backend/api/functions/__pycache__/QrCodeScanner.cpython-311.pyc
-gatekeeper_backend/api/functions/__pycache__/RegisterLogic.cpython-311.pyc
