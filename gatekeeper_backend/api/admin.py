@@ -1,10 +1,13 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
+
+from .forms import UserProfileCreationForm, UserProfileChangeForm
 from .models import UserProfile
-from .models import QrCode
 
-class UserProfileAdmin(admin.ModelAdmin):
-    readonly_fields = ('id',)
+class UserProfileAdmin(UserAdmin):
+    add_form = UserProfileCreationForm
+    form = UserProfileChangeForm
+    model = UserProfile
+    list_display = ["email", "username",]
 
-# Register your models here.
-admin.site.register(QrCode)
 admin.site.register(UserProfile, UserProfileAdmin)
