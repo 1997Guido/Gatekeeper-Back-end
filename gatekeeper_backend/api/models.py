@@ -20,7 +20,6 @@ class UserProfile(models.Model):
     last_name = models.CharField(max_length=64, null=False)
     age = models.IntegerField(null=False)
     date_created = models.DateField(auto_now_add=True, null=False)
-    admin = models.BooleanField(default=False, null=False)
     def __str__(self):
         return self.last_name
 
