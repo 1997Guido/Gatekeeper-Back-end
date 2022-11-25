@@ -1,8 +1,11 @@
 from rest_framework import serializers
-from .models import Users
+from .models import UserProfile
 
-class UserSerializer(serializers.ModelSerializer):
+
+#this code serializes our model so it can be show in a readable format. you can configure which fields to serialize
+
+class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Users
+        model = UserProfile
         fields = ('id', 'first_name', 'last_name', 'age', 'date_created', 'admin')
 

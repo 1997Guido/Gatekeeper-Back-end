@@ -1,18 +1,20 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from rest_framework import generics
-from .serializers import UserSerializer
-from .models import Users
+from .serializers import UserProfileSerializer
+from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
+from .models import UserProfile
 from django.http import HttpResponse
 from .functions.RegisterLogic import RegisterLogic
 from .functions.ProfileLogic import ProfileLogic
 from .functions.QrCodeGenerator import QrCodeGenerator
 from .functions.QrCodeScanner import QrCodeScanner
 
-# Create your views here.
+# These are views(functions) which are ran when the frontend calls their specified paths(in urls.py)
 
-class UsersView(generics.ListAPIView):
-    queryset = Users.objects.all()
-    serializer_def = UserSerializer
+class UserProfileView(generics.ListAPIView):
+    queryset = UserProfile.objects.all()
+    serializer_def = UserProfileSerializer
 
 def RegisterApi(request):
     return HttpResponse(RegisterLogic())
@@ -25,3 +27,6 @@ def QrCodeScannerApi(request):
 
 def ProfileApi(request):
     return HttpResponse(ProfileLogic())
+
+def Login_User(request):
+    return HttpResponse()
