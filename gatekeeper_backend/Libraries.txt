@@ -1,0 +1,4 @@
+Libraries used:
+
+Cryptography
+Fernet
