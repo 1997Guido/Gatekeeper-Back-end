@@ -12,7 +12,6 @@ from django.contrib.auth.models import AbstractUser
 #Like age,gender and QrUid. the QrUid is the field for the unique id generated for each user in QrCodeGenerator.py
 
 class UserProfile(AbstractUser):
-    pass
     GENDER_CHOICES = (
     ('M', 'Male'),
     ('F', 'Female')
