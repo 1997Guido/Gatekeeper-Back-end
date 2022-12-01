@@ -32,8 +32,9 @@ def QrCodeGenerator():
 
     key = "rTFB13nkI4mt76RMiJOpoNZS_aa5LUNyJIJ4BPlbPEY="
     f = Fernet(key)
-    temp = "\n " #For testing purposes
+    temp = "\n[ " #For testing purposes
+    temp2 = " ]\n" #For testing purposes
     
     UserDataEncrypted = f.encrypt(UserDataJson.encode())
     
-    return (UserDataJson, temp, UserDataEncrypted)
+    return (UserDataJson, temp, UserDataEncrypted, temp2)
