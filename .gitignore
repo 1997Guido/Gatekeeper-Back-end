@@ -112,3 +112,6 @@ gatekeeper_backend/gatekeeper_backend/__pycache__/__init__.cpython-311.pyc
 gatekeeper_backend/gatekeeper_backend/__pycache__/settings.cpython-311.pyc
 gatekeeper_backend/gatekeeper_backend/__pycache__/urls.cpython-311.pyc
 gatekeeper_backend/gatekeeper_backend/__pycache__/wsgi.cpython-311.pyc
+gatekeeper_backend/api/functions/__pycache__/ProfileLogic.cpython-311.pyc
+gatekeeper_backend/api/__pycache__/views.cpython-311.pyc
+gatekeeper_backend/api/__pycache__/urls.cpython-311.pyc
