@@ -12,6 +12,7 @@ from .functions.QrCodeScanner import QrCodeScanner
 
 class UserProfileView(generics.ListAPIView):
     queryset = UserProfile.objects.all()
+    serializer_class = UserProfileSerializer
     serializer_def = UserProfileSerializer
 
 
@@ -22,5 +23,7 @@ def QrCodeScannerApi(request):
     return HttpResponse(QrCodeScanner)
 
 def ProfileApi(request):
-    user=UserProfile.objects.filter(first_name=request.user)
-    return HttpResponse(user)
+    if (request.user.is_active):
+        return HttpResponse('logged in')
+    else:
+        return HttpResponse('not')
