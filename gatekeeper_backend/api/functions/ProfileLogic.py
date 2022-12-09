@@ -1,6 +1,10 @@
 from ..models import UserProfile
 import requests
+from django.http import JsonResponse
+from ..models import UserProfile
+from ..serializers import UserProfileSerializer
 
-def ProfileLogic(request):
-    user=UserProfile.objects.filter(user=request.user)
+
+def ProfileLogic(userId):
+    user = UserProfile.objects.get(pk=userId)
     return (user)
