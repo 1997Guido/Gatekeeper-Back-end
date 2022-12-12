@@ -10,8 +10,8 @@ def ProfileLogic(request):
             "email",
             "first_name",
             "last_name",
-            "last_login",
-            "is_active",
+            "age",
+            "gender",
         )
         .first()
     )

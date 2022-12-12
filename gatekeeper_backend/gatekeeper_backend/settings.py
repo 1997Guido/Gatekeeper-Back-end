@@ -32,12 +32,8 @@ ALLOWED_HOSTS = [
     'localhost:3000'
 ]
 CORS_ALLOW_METHODS = [
-    "DELETE",
     "GET",
-    "OPTIONS",
-    "PATCH",
     "POST",
-    "PUT",
 ]
 CORS_ALLOW_HEADERS = [
     "accept",
@@ -51,11 +47,11 @@ CORS_ALLOW_HEADERS = [
     "x-requested-with",
     'access-control-allow-origin'
 ]
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ORIGIN_WHITELIST = ['http://*.localhost:3000','http://*.127.0.0.1', 'http://127.0.0.1:3000', 'http://localhost:3000']
 CORS_ALLOW_CREDENTIALS = True
-CSRF_TRUSTED_ORIGINS = ['http://*.localhost:3000','http://*.127.0.0.1', 'http://127.0.0.1:3000']
+CSRF_TRUSTED_ORIGINS = ['http://*.localhost:3000','http://*.127.0.0.1', 'http://127.0.0.1:3000', 'http://localhost:3000']
 # Application definition
-
+ACCOUNT_LOGOUT_ON_GET = True
 INSTALLED_APPS = [
     'corsheaders',
     'django.contrib.admin',
@@ -170,3 +166,5 @@ REST_FRAMEWORK = {
 }
 JWT_AUTH_COOKIE = 'gatekeeper-auth'
 JWT_AUTH_REFRESH_COOKIE = 'gatekeeper-refresh-token'
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+SESSION_COOKIE_AGE = 5 * 240

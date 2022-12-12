@@ -27,4 +27,4 @@ def AuthCheckApi(request):
     return HttpResponse(AuthCheck(request))
 
 def ProfileApi(request):
-    return JsonResponse(ProfileLogic(request))
+    return JsonResponse(ProfileLogic(request),safe=False)
