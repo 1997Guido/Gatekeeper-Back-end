@@ -24,7 +24,6 @@ def QrCodeGenerator():
         "last_name" : "Vermeer",
         "age" : "20",
         "gender" : "Male",
-        "admin" : "Yes",
         "uid" : ""
     }
     
