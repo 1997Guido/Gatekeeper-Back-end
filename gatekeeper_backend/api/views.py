@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 from django.http import HttpRequest
 from .functions.ProfileLogic import ProfileLogic
-from .functions.QrCodeGenerator import QrCodeGenerator
+from .functions.QrInfoLogic import QrInfoLogic
 from .functions.QrCodeScanner import QrCodeScanner
 from .functions.AuthCheck import AuthCheck
 from django.http import JsonResponse
@@ -17,7 +17,7 @@ class UserProfileView(generics.ListAPIView):
 
 
 def QrCodeGeneratorApi(request):
-    return HttpResponse(QrCodeGenerator())
+    return JsonResponse(QrInfoLogic(request),safe=False)
 
 def QrCodeScannerApi(request):
     return HttpResponse(QrCodeScanner())
