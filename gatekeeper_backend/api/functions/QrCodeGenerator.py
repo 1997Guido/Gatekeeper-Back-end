@@ -18,18 +18,11 @@ def generate_unique_id():
         
     return uid
 
-def QrCodeGenerator():
-    UserData = {
-        "first_name" : "Mike",
-        "last_name" : "Vermeer",
-        "age" : "20",
-        "gender" : "Male",
-        "uid" : ""
-    }
+def QrCodeGenerator(user):
     
-    UserData["uid"] = generate_unique_id()
+    user["uid"] = generate_unique_id()
     
-    UserDataJson = json.dumps(UserData, ensure_ascii=False)
+    UserDataJson = json.dumps(user, ensure_ascii=False)
 
     key = "rTFB13nkI4mt76RMiJOpoNZS_aa5LUNyJIJ4BPlbPEY="
     f = Fernet(key)
