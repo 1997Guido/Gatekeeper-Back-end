@@ -25,12 +25,35 @@ SECRET_KEY = 'django-insecure-8x-6xtjr0fi5=-amw61(dsxwfsfs@r7l1ei(ws)!@9m3v46a#f
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
-
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+    '127.0.0.1:3000',
+    'localhost:3000'
+]
+CORS_ALLOW_METHODS = [
+    "GET",
+    "POST",
+]
+CORS_ALLOW_HEADERS = [
+    "accept",
+    "accept-encoding",
+    "authorization",
+    "content-type",
+    "dnt",
+    "origin",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+    'access-control-allow-origin'
+]
+CORS_ORIGIN_WHITELIST = ['http://*.localhost:3000','http://*.127.0.0.1', 'http://127.0.0.1:3000', 'http://localhost:3000']
+CORS_ALLOW_CREDENTIALS = True
+CSRF_TRUSTED_ORIGINS = ['http://*.localhost:3000','http://*.127.0.0.1', 'http://127.0.0.1:3000', 'http://localhost:3000']
 # Application definition
-
+ACCOUNT_LOGOUT_ON_GET = True
 INSTALLED_APPS = [
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -38,10 +61,20 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'api',
-    'rest_framework'
+    'rest_framework',
+    'rest_framework.authtoken',
+    'dj_rest_auth',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'dj_rest_auth.registration',
 ]
 
+SITE_ID = 1
+
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -124,3 +157,14 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = "api.UserProfile"
+
+REST_USE_JWT = True
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
+    )
+}
+JWT_AUTH_COOKIE = 'gatekeeper-auth'
+JWT_AUTH_REFRESH_COOKIE = 'gatekeeper-refresh-token'
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+SESSION_COOKIE_AGE = 5 * 240
