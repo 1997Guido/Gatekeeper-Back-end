@@ -25,6 +25,7 @@ SECRET_KEY = 'django-insecure-8x-6xtjr0fi5=-amw61(dsxwfsfs@r7l1ei(ws)!@9m3v46a#f
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
@@ -159,6 +160,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = "api.UserProfile"
 
 REST_USE_JWT = True
+REST_AUTH_TOKEN_MODEL = None
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
@@ -168,3 +170,6 @@ JWT_AUTH_COOKIE = 'gatekeeper-auth'
 JWT_AUTH_REFRESH_COOKIE = 'gatekeeper-refresh-token'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 SESSION_COOKIE_AGE = 5 * 240
+REST_AUTH_REGISTER_SERIALIZERS = {
+    'REGISTER_SERIALIZER': 'api.serializers.CustomRegisterSerializer'
+}
