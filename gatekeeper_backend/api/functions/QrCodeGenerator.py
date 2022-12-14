@@ -1,7 +1,5 @@
 from ..models import UserProfile
-import json
 import random, string, base64, os
-import cryptography
 import qrcode
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
@@ -19,22 +17,22 @@ def generate_unique_id():
     return uid
 
 def QrCodeGenerator(user):
+    UserProfile.objects.filter(pk=user["pk"]).update(QrUid=generate_unique_id())
+    ##user["QrUid"] = generate_unique_id()
     
-    user["uid"] = generate_unique_id()
-    
-    UserDataJson = json.dumps(user, ensure_ascii=False)
+    ##UserDataJson = json.dumps(user, ensure_ascii=False)
 
     key = "rTFB13nkI4mt76RMiJOpoNZS_aa5LUNyJIJ4BPlbPEY="
     f = Fernet(key)
     temp = "\n[ " #For testing purposes
     temp2 = " ]\n" #For testing purposes
     
-    UserDataEncrypted = f.encrypt(UserDataJson.encode())
+    #UserDataEncrypted = f.encrypt(user.encode())
 
-    qr_data = UserDataEncrypted
+    qr_data = user
 
     qr_img = qrcode.make(qr_data)
 
     qr_img.save("qrdir/qrTest.png")
     
-    return (UserDataJson, temp, UserDataEncrypted, temp2)
+    return (user)

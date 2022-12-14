@@ -6,11 +6,12 @@ def QrInfoLogic(request):
     user = (
         UserProfile.objects.filter(pk=request.user.pk)
         .values(
+            "pk",
             "username",
             "email",
             "first_name",
             "last_name",
-            "age",
+            "date_of_birth",
             "gender",
             "QrUid",
         )

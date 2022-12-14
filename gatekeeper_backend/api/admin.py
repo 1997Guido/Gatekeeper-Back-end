@@ -16,7 +16,7 @@ class CustomUserAdmin(UserAdmin):
             'Additional Info',
             {
                 'fields':(
-                    'age',
+                    'date_of_birth',
                     'gender',
                     'QrUid',
                 )
