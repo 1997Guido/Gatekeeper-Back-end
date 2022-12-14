@@ -133,3 +133,10 @@ gatekeeper_backend/api/migrations/__pycache__/0008_alter_userprofile_gender.cpyt
 gatekeeper_backend/api/migrations/__pycache__/0009_remove_userprofile_age_userprofile_date_of_birth.cpython-311.pyc
 gatekeeper_backend/api/functions/__pycache__/AuthCheck.cpython-311.pyc
 gatekeeper_backend/api/functions/__pycache__/AuthCheck.cpython-311.pyc
+gatekeeper_backend/gatekeeper_backend/__pycache__/wsgi.cpython-311.pyc
+gatekeeper_backend/api/migrations/__pycache__/0006_alter_userprofile_qruid.cpython-311.pyc
+gatekeeper_backend/api/migrations/__pycache__/0005_alter_userprofile_qruid.cpython-311.pyc
+gatekeeper_backend/api/migrations/__pycache__/0004_alter_userprofile_qruid_alter_userprofile_age.cpython-311.pyc
+gatekeeper_backend/api/migrations/__pycache__/0003_userprofile_qruid_userprofile_gender.cpython-311.pyc
+gatekeeper_backend/api/migrations/__pycache__/0002_userprofile_age.cpython-311.pyc
+gatekeeper_backend/api/functions/__pycache__/AuthCheck.cpython-311.pyc
