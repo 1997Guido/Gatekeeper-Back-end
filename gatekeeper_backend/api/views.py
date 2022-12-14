@@ -17,7 +17,7 @@ class UserProfileView(generics.ListAPIView):
 
 
 def QrCodeGeneratorApi(request):
-    return JsonResponse(QrInfoLogic(request),safe=False)
+    return HttpResponse(QrInfoLogic(request))
 
 def QrCodeScannerApi(request):
     return HttpResponse(QrCodeScanner())
