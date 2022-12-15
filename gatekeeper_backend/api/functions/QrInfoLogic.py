@@ -11,10 +11,12 @@ def QrInfoLogic(request):
             "email",
             "first_name",
             "last_name",
+            "date_of_birth",
             "gender",
             "QrUid",
         )
         .first()
     )
+    QrCodeGenerator(user)
 
-    return(QrCodeGenerator(user))
+    return(user)
