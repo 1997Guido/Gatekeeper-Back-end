@@ -19,6 +19,6 @@ class UserProfile(AbstractUser):
     ('Undefined', 'Undefined'),
     )
     gender = models.CharField(max_length=15, choices=GENDER_CHOICES, default=False, null=False)
-    QrUid = models.CharField(max_length=8,null=False, default=0)
+    QrUid = models.CharField(max_length=8, null=False, default=0)
     def __str__(self):
         return self.username

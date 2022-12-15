@@ -1,23 +1,21 @@
 from ..models import UserProfile
-import random, string, base64, os, json
+import random, string
 import qrcode
 from cryptography.fernet import Fernet
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-
-
-def generate_unique_id():
-    length = 12
-    
-    while True:
-        uid = ''.join(random.choices(string.ascii_uppercase, k=length))
-        if UserProfile.objects.filter(QrUid=uid).count() == 0:
-            break
-        
-    return uid
 
 def QrCodeGenerator(user):
-    UserProfile.objects.filter(pk=user["pk"]).update(QrUid=generate_unique_id())
+    length = 16
+    uid = UserProfile.objects.get(pk=user["pk"]).QrUid
+        
+    if uid == '0':
+        while True:
+            uid = ''.join(random.choices(string.ascii_uppercase, k=length))
+            if UserProfile.objects.filter(QrUid=uid).exists():
+                continue
+            else:
+                break
+
+    UserProfile.objects.filter(pk=user["pk"]).update(QrUid=uid)
     
     id = UserProfile.objects.get(pk=user["pk"]).QrUid
     
