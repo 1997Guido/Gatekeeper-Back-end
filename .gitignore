@@ -146,3 +146,4 @@ gatekeeper_backend/api/migrations/__pycache__/0003_userprofile_qruid_userprofile
 gatekeeper_backend/api/migrations/__pycache__/0004_alter_userprofile_qruid_alter_userprofile_age.cpython-311.pyc
 gatekeeper_backend/api/migrations/__pycache__/0005_alter_userprofile_qruid.cpython-311.pyc
 gatekeeper_backend/api/migrations/__pycache__/0006_alter_userprofile_qruid.cpython-311.pyc
+gatekeeper_backend/qrdir/qrTest.png
