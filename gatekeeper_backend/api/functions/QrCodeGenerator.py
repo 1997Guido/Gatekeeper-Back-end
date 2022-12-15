@@ -1,29 +1,5 @@
 from ..models import UserProfile
-<<<<<<< HEAD
-<<<<<<< HEAD
-import random, string
-import qrcode
-from cryptography.fernet import Fernet
-
-def QrCodeGenerator(user):
-    def generate_unique_id(user):
-        length = 12
-        uid = UserProfile.objects.get(pk=user["pk"]).QrUid
-        
-        if uid == 0:
-            while True:
-                uid = ''.join(random.choices(string.ascii_uppercase, k=length))
-                if UserProfile.objects.filter(QrUid=uid).count() == 0:
-                    break
-            return uid
-        
-        UserProfile.objects.filter(pk=user["pk"]).update(QrUid=generate_unique_id(user))
-    
-    #UserProfile.objects.filter(pk=user["pk"]).update(QrUid=generate_unique_id(user))
-=======
-=======
->>>>>>> parent of 020b388 (commit)
-import random, string, base64, os
+import random, string, base64, os, json
 import qrcode
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
@@ -31,7 +7,7 @@ from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
 
 def generate_unique_id():
-    length = 8
+    length = 12
     
     while True:
         uid = ''.join(random.choices(string.ascii_uppercase, k=length))
@@ -42,33 +18,19 @@ def generate_unique_id():
 
 def QrCodeGenerator(user):
     UserProfile.objects.filter(pk=user["pk"]).update(QrUid=generate_unique_id())
-    ##user["QrUid"] = generate_unique_id()
-<<<<<<< HEAD
->>>>>>> parent of 020b388 (commit)
-=======
->>>>>>> parent of 020b388 (commit)
     
-    ##UserDataJson = json.dumps(user, ensure_ascii=False)
-
+    id = UserProfile.objects.get(pk=user["pk"]).QrUid
+    
+    UserData = str(id).encode('utf-8')
     key = "rTFB13nkI4mt76RMiJOpoNZS_aa5LUNyJIJ4BPlbPEY="
     f = Fernet(key)
-    temp = "\n[ " #For testing purposes
-    temp2 = " ]\n" #For testing purposes
     
-    #UserDataEncrypted = f.encrypt(user.encode())
-
-    qr_data = user
+    UserDataEncrypted = f.encrypt(UserData)
+    
+    qr_data = UserDataEncrypted
 
     qr_img = qrcode.make(qr_data)
 
     qr_img.save("qrdir/qrTest.png")
     
-<<<<<<< HEAD
-<<<<<<< HEAD
-    return (UserDataEncrypted, "[", id, "]")
-=======
-    return (user)
->>>>>>> parent of 020b388 (commit)
-=======
-    return (user)
->>>>>>> parent of 020b388 (commit)
+    return (UserDataEncrypted)
