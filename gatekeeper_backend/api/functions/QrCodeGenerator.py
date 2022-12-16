@@ -25,10 +25,10 @@ def QrCodeGenerator(user):
     
     UserDataEncrypted = f.encrypt(UserData)
     
-    qr_data = UserDataEncrypted
+    #qr_data = UserDataEncrypted
 
-    qr_img = qrcode.make(qr_data)
+    #qr_img = qrcode.make(qr_data)
 
-    qr_img.save("qrdir/qrTest.png")
+    #qr_img.save("qrdir/qrTest.png")
     
     return (UserDataEncrypted)
