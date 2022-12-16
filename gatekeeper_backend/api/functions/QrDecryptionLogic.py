@@ -17,4 +17,4 @@ def QrDecryptionLogic(request):
         .first()
     )
 
-    return(QrCodeVerificator(user))
+    return(QrCodeVerificator(user, request))

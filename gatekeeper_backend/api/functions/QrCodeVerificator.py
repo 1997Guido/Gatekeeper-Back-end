@@ -1,13 +1,15 @@
 from ..models import UserProfile
 from cryptography.fernet import Fernet
-import difflib
+import json
 
-def QrCodeVerificator(user):
+def QrCodeVerificator(user, request):
     uid = UserProfile.objects.get(pk=user["pk"]).QrUid
 
-    id = "gAAAAABjnGow0H7M7giwA0nZ49dcLfXYLaipVzDUyqn69ArIUKzkgG9nV76A52OQQX0ym5I4Z83AUUsce-w1k4Rs4WJ2mYhpcA=="
+    qrdata = request.body.get("encryptedqrdata").decode("utf-8")
+
     
-    QrData = str(id).encode('utf-8')
+    
+    QrData = str(qrdata).encode('utf-8')
     key = "rTFB13nkI4mt76RMiJOpoNZS_aa5LUNyJIJ4BPlbPEY="
     f = Fernet(key)
     
@@ -16,10 +18,8 @@ def QrCodeVerificator(user):
     QrDataDecrypted = QrDataDecrypted.decode('utf-8')
     
     if QrDataDecrypted == uid:
-        return True
+        return (True, " ", uid)
     else:
-        return False
-    
-    #return('\n'.join(difflib.ndiff([QrDataDecrypted], [uid])))
+        return (False, "", uid)
     
     #return (QrDataDecrypted, uid)
