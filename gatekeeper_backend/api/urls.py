@@ -4,6 +4,7 @@ from .views import QrCodeGeneratorApi
 from .views import QrCodeScannerApi
 from .views import ProfileApi
 from .views import AuthCheckApi
+from .views import QrCodeVerificatorApi
 
 
 
@@ -14,4 +15,5 @@ urlpatterns = [
     path('qrcodescannerapi', QrCodeScannerApi),
     path('profileapi', ProfileApi),
     path('authcheck', AuthCheckApi),
+    path('qrcodeverificatorapi', QrCodeVerificatorApi),
 ]
