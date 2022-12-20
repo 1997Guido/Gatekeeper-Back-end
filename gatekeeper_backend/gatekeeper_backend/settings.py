@@ -53,7 +53,13 @@ CORS_ALLOW_CREDENTIALS = True
 CSRF_TRUSTED_ORIGINS = ['http://*.localhost:3000','http://*.127.0.0.1', 'http://127.0.0.1:3000', 'http://localhost:3000']
 # Application definition
 ACCOUNT_LOGOUT_ON_GET = True
+
+GRAPH_MODELS ={
+    'all_applications': True,
+    'graph_models': True,
+     }
 INSTALLED_APPS = [
+    'django_extensions',
     'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
