@@ -23,19 +23,24 @@ class UserProfile(AbstractUser):
     def __str__(self):
         return self.username
 
-class Events(models.Model):
+class Event(models.Model):
     EventOwner = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    EventName = models.CharField(max_length=50, null=False)
+    EventTitle = models.CharField(max_length=50, null=False)
     EventDate = models.DateField(null=False)
     EventTimeStart = models.TimeField(null=False)
     EventTimeEnd = models.TimeField(null=False)
     EventLocation = models.CharField(max_length=50, null=False)
     EventDescription = models.CharField(max_length=100, null=False)
-    EventGuests = models.ManyToManyField(UserProfile, related_name='EventGuests')
+    EventInvitedGuests = models.ManyToManyField(UserProfile, related_name='EventGuests')
     EventIsPrivate = models.BooleanField(default=False)
     EventIsCancelled = models.BooleanField(default=False)
     EventIsFree = models.BooleanField(default=False)
     EventPrice = models.DecimalField(max_digits=5, decimal_places=2, null=True)
+    EventDuration = models.TimeField(null=False)
+    EventMaxGuests = models.IntegerField(null=False, default=50)
+    EventCurrentGuests = models.IntegerField(null=False)
+    EventMinimumAge = models.IntegerField(null=False)
+    EventOrganizer = models.CharField(max_length=50, null=False)
     def __str__(self):
-        return self.EventName
+        return self.EventTitle
 
