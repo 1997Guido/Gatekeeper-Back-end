@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import UserProfile
+from .models import Event
 from dj_rest_auth.registration.serializers import RegisterSerializer
 
 
@@ -28,5 +29,9 @@ class CustomRegisterSerializer(RegisterSerializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ('first_name', 'last_name', 'date_of_birth', 'gender', 'email', 'username', 'QrUid')
+        fields = ('first_name', 'last_name', 'date_of_birth', 'gender', 'email')
 
+class EventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
+        fields = ('EventTitle', 'EventDate', 'EventTimeStart', 'EventTimeEnd', 'EventLocation', 'EventDescription', 'EventInvitedGuests', 'EventIsPrivate', 'EventIsCancelled','EventMaxGuests', 'EventMinimumAge', 'EventOrganizer', 'EventOwner')
