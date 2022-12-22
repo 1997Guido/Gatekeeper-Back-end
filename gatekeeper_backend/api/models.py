@@ -34,7 +34,6 @@ class Event(models.Model):
     EventIsCancelled = models.BooleanField(default=False)
     EventIsFree = models.BooleanField(default=False)
     EventPrice = models.DecimalField(max_digits=5, decimal_places=2,default=0, blank=True)
-    EventDuration = models.DurationField(null=False)
     EventMaxGuests = models.IntegerField(null=False, default=50)
     EventCurrentGuests = models.IntegerField(null=False, default=0)
     EventMinimumAge = models.IntegerField(null=False, default=0)

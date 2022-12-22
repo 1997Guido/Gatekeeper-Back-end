@@ -1,6 +1,7 @@
 from ..models import UserProfile
 from ..models import Event
 import json
+
 def SingleEventView(request):
     pkdata= json.loads(request.body)
     event = (
