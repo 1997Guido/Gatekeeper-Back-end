@@ -22,7 +22,7 @@ class UserProfile(AbstractUser):
     QrUid = models.CharField(max_length=8, null=False, default=0)
 
 class Event(models.Model):
-    EventOwner = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    EventOwner = models.ForeignKey(UserProfile, on_delete=models.CASCADE, blank=True, null=True)
     EventTitle = models.CharField(max_length=50, null=False)
     EventDate = models.DateField(null=False)
     EventTimeStart = models.TimeField(null=False)
@@ -38,4 +38,6 @@ class Event(models.Model):
     EventCurrentGuests = models.IntegerField(null=False, default=0)
     EventMinimumAge = models.IntegerField(null=False, default=0)
     EventOrganizer = models.CharField(max_length=50)
+    def __str__(self):
+        return self.EventTitle
 
