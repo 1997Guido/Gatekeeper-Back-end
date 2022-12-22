@@ -184,3 +184,4 @@ gatekeeper_backend/api/migrations/__pycache__/0004_alter_userprofile_qruid_alter
 gatekeeper_backend/api/migrations/__pycache__/0005_alter_userprofile_qruid.cpython-311.pyc
 gatekeeper_backend/api/migrations/__pycache__/0006_alter_userprofile_qruid.cpython-311.pyc
 gatekeeper_backend/gatekeeper_backend/__pycache__/wsgi.cpython-311.pyc
+*.pyc
