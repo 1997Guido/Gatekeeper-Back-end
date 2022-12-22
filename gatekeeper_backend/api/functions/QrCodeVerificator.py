@@ -10,6 +10,7 @@ def QrCodeVerificator(user, request):
         "first_name",
         "last_name",
         "gender",
+        "date_of_birth"
         )
         .first()
     )
@@ -32,7 +33,7 @@ def QrCodeVerificator(user, request):
         "check": check
         }
         
-        jsondata = json.dumps(notjsondata)
+        jsondata = json.dumps(notjsondata, default=str)
         
         return (jsondata)
     else:
