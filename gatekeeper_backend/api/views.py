@@ -54,3 +54,6 @@ class EventViewApiPersonal(generics.ListAPIView):
     queryset = Event.objects.all()
     def get_queryset(self):
         return Event.objects.filter(EventOwner=self.request.user.pk)
+
+def GetUserPk(request):
+    return HttpResponse(request.user.pk)
