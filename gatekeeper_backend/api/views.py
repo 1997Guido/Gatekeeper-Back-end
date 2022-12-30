@@ -51,7 +51,6 @@ class UserProfileView(generics.ListAPIView):
 class EventViewApiPersonal(generics.ListAPIView):
     serializer_class = EventSerializer
     serializer_def = EventSerializer
-    queryset = Event.objects.all()
     def get_queryset(self):
         return Event.objects.filter(EventOwner=self.request.user.pk)
 
