@@ -35,6 +35,7 @@ ALLOWED_HOSTS = [
 CORS_ALLOW_METHODS = [
     "GET",
     "POST",
+    "PUT",
 ]
 CORS_ALLOW_HEADERS = [
     "accept",

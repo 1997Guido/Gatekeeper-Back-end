@@ -9,8 +9,7 @@ from .views import SingleEventApi
 from .views import EventCreationApi
 from .views import EventViewApi
 from .views import EventViewApiPersonal
-from .views import GetUserPk
-
+from .views import EventEditApi
 urlpatterns = [
     path('profiles', UserProfileView.as_view()),
     path('qrcodegeneratorapi', QrCodeGeneratorApi),
@@ -22,5 +21,5 @@ urlpatterns = [
     path('eventcreationapi', EventCreationApi.as_view()),
     path('eventviewapi', EventViewApi.as_view()),
     path('eventviewapipersonal', EventViewApiPersonal.as_view()),
-    path('getuserpk', GetUserPk),
+    path('eventeditapi', EventEditApi),
 ]
