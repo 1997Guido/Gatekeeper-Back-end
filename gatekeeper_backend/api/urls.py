@@ -10,6 +10,7 @@ from .views import EventCreationApi
 from .views import EventViewApi
 from .views import EventViewApiPersonal
 from .views import EventEditApi
+from .views import ListOfUsernames
 urlpatterns = [
     path('profiles', UserProfileView.as_view()),
     path('qrcodegeneratorapi', QrCodeGeneratorApi),
@@ -22,4 +23,5 @@ urlpatterns = [
     path('eventviewapi', EventViewApi.as_view()),
     path('eventviewapipersonal', EventViewApiPersonal.as_view()),
     path('eventeditapi', EventEditApi),
+    path('usernamelistviewapi', ListOfUsernames),
 ]

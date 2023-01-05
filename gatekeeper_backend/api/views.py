@@ -67,3 +67,7 @@ class EventViewApiPersonal(generics.ListAPIView):
     serializer_def = EventSerializer
     def get_queryset(self):
         return Event.objects.filter(EventOwner=self.request.user.pk)
+
+def ListOfUsernames(request):
+    jsonlist = list(UserProfile.objects.values('username'))
+    return JsonResponse(jsonlist,safe=False)
