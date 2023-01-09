@@ -1,6 +1,7 @@
 from rest_framework import generics
 from rest_framework import viewsets
 from .serializers import UserProfileSerializer
+from .serializers import UserNameSerializer
 from .serializers import EventSerializer
 from django.http import HttpResponse
 from .functions.ProfileLogic import ProfileLogic
@@ -68,6 +69,7 @@ class EventViewApiPersonal(generics.ListAPIView):
     def get_queryset(self):
         return Event.objects.filter(EventOwner=self.request.user.pk)
 
-def ListOfUsernames(request):
-    jsonlist = list(UserProfile.objects.values('username'))
-    return JsonResponse(jsonlist,safe=False)
+class UsernameViewApi(generics.ListAPIView):
+    serializer_class = UserNameSerializer
+    serializer_def = UserNameSerializer
+    queryset = UserProfile.objects.all()
