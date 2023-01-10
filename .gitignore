@@ -196,3 +196,4 @@ gatekeeper_backend/api/migrations/__pycache__/0016_alter_event_eventduration.cpy
 gatekeeper_backend/api/migrations/__pycache__/0017_alter_event_eventduration.cpython-311.pyc
 gatekeeper_backend/api/migrations/__pycache__/0018_alter_event_eventinvitedguests_and_more.cpython-311.pyc
 gatekeeper_backend/api/migrations/__pycache__/0019_remove_event_eventduration.cpython-311.pyc
+gatekeeper_backend/api/migrations/__pycache__/0020_alter_event_eventowner.cpython-311.pyc
