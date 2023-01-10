@@ -207,3 +207,4 @@ gatekeeper_backend/api/functions/__pycache__/QrCodeVerificator.cpython-311.pyc
 gatekeeper_backend/api/functions/__pycache__/EventCreation.cpython-311.pyc
 gatekeeper_backend/api/functions/__pycache__/AuthCheck.cpython-311.pyc
 gatekeeper_backend/gatekeeper_backend/__pycache__/wsgi.cpython-311.pyc
+gatekeeper_backend/api/migrations/__pycache__/0020_alter_event_eventowner.cpython-311.pyc
