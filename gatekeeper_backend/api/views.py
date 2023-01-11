@@ -47,6 +47,12 @@ def EventEditApi(request):
     else:
         return HttpResponse("You are not the owner of this event")
 
+def EventDeleteApi(request):
+    
+
+
+
+
 class EventCreationApi(generics.CreateAPIView):
     serializer_class = EventSerializer
     serializer_def = EventSerializer
