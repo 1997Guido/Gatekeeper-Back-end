@@ -48,8 +48,24 @@ def EventEditApi(request):
         return HttpResponse("You are not the owner of this event")
 
 def EventDeleteApi(request):
+    data = json.loads(request.body)
+    event = Event.objects.get(pk=data["pk"])
+    if request.user.pk == event.EventOwner.pk:
+        event.delete()
+        return HttpResponse("Event deleted")
+    else:
+        return HttpResponse("You are not the owner of this event")
     
-
+def EventInviteApi(request):
+    data = json.loads(request.body)
+    event = Event.objects.get(pk=data["pk"])
+    if request.user.pk == event.EventOwner.pk:
+        for value in data["invitedUsers"]:
+            user = UserProfile.objects.get(username=value['label'])
+            event.EventInvitedGuests.add(user.pk)
+        return HttpResponse("Users invited")
+    else:
+        return HttpResponse("You are not the owner of this event")
 
 
 
@@ -79,3 +95,10 @@ class UsernameViewApi(generics.ListAPIView):
     serializer_class = UserNameSerializer
     serializer_def = UserNameSerializer
     queryset = UserProfile.objects.all()
+
+class ViewSingleEvent(generics.ListAPIView):
+    serializer_class = EventSerializer
+    serializer_def = EventSerializer
+    def get_queryset(self):
+        event = Event.objects.filter(pk=self.request.query_params.get('pk'))
+        return (event)
