@@ -5,7 +5,6 @@ from .views import QrCodeScannerApi
 from .views import ProfileApi
 from .views import AuthCheckApi
 from .views import QrCodeVerificatorApi
-from .views import SingleEventApi
 from .views import EventCreationApi
 from .views import EventViewApi
 from .views import EventViewApiPersonal
@@ -21,7 +20,6 @@ urlpatterns = [
     path('profileapi', ProfileApi),
     path('authcheck', AuthCheckApi),
     path('qrcodeverificatorapi', QrCodeVerificatorApi),
-    path('singleeventapi', SingleEventApi),
     path('eventcreationapi', EventCreationApi.as_view()),
     path('eventviewapi', EventViewApi.as_view()),
     path('eventviewapipersonal', EventViewApiPersonal.as_view()),
@@ -30,4 +28,5 @@ urlpatterns = [
     path('eventdeleteapi', EventDeleteApi),
     path('eventinviteapi', EventInviteApi),
     path('viewsingleevent', ViewSingleEvent.as_view()),
+    
 ]

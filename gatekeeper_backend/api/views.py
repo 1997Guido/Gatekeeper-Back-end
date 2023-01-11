@@ -9,7 +9,6 @@ from .functions.QrInfoLogic import QrInfoLogic
 from .functions.QrDecryptionLogic import QrDecryptionLogic
 from .functions.QrCodeScanner import QrCodeScanner
 from .functions.AuthCheck import AuthCheck
-from .functions.SingleEventView import SingleEventView
 from django.http import JsonResponse
 from .models import UserProfile
 from .models import Event
@@ -30,9 +29,6 @@ def AuthCheckApi(request):
 
 def ProfileApi(request):
     return JsonResponse(ProfileLogic(request),safe=False)
-
-def SingleEventApi(request):
-    return JsonResponse(SingleEventView(request),safe=False)
 
 def EventEditApi(request):
     data = json.loads(request.body)
@@ -94,7 +90,11 @@ class EventViewApiPersonal(generics.ListAPIView):
 class UsernameViewApi(generics.ListAPIView):
     serializer_class = UserNameSerializer
     serializer_def = UserNameSerializer
-    queryset = UserProfile.objects.all()
+    def get_queryset(self):
+        if self.request.query_params.get('allusers') == 'yes':
+            return UserProfile.objects.all()
+
+            
 
 class ViewSingleEvent(generics.ListAPIView):
     serializer_class = EventSerializer
