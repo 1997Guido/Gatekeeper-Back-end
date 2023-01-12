@@ -253,3 +253,5 @@ gatekeeper_backend/api/migrations/__pycache__/0020_alter_event_eventowner.cpytho
 gatekeeper_backend/gatekeeper_backend/__pycache__/wsgi.cpython-311.pyc
 *.pyc
 *.pyc
+*.pyc
+*.pyc

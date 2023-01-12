@@ -93,13 +93,6 @@ class EventViewApiPersonal(generics.ListAPIView):
     def get_queryset(self):
         return Event.objects.filter(EventOwner=self.request.user.pk)
 
-class UsernameViewApi(generics.ListAPIView):
-    serializer_class = UserNameSerializer
-    serializer_def = UserNameSerializer
-    def get_queryset(self):
-        if self.request.query_params.get('allusers') == 'yes':
-            return UserProfile.objects.all()
-
 class ViewSingleEvent(generics.ListAPIView):
     serializer_class = EventSerializer
     serializer_def = EventSerializer
@@ -118,3 +111,5 @@ class UsernameViewApi(generics.ListAPIView):
     def get_queryset(self):
         if self.request.query_params.get('allusers') == 'yes':
             return UserProfile.objects.all()
+        if self.request.query_params.get('allusers') == 'me':
+            return UserProfile.objects.filter(pk=self.request.user.pk)
