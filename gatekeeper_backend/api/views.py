@@ -94,11 +94,21 @@ class UsernameViewApi(generics.ListAPIView):
         if self.request.query_params.get('allusers') == 'yes':
             return UserProfile.objects.all()
 
-            
-
 class ViewSingleEvent(generics.ListAPIView):
     serializer_class = EventSerializer
     serializer_def = EventSerializer
     def get_queryset(self):
         event = Event.objects.filter(pk=self.request.query_params.get('pk'))
         return (event)
+
+def getInvitedUsers(request):
+    data = json.loads(request.body)
+    event = Event.objects.get(pk=data["pk"])
+    return JsonResponse(list(event.EventInvitedGuests.values()),safe=False)
+
+class UsernameViewApi(generics.ListAPIView):
+    serializer_class = UserNameSerializer
+    serializer_def = UserNameSerializer
+    def get_queryset(self):
+        if self.request.query_params.get('allusers') == 'yes':
+            return UserProfile.objects.all()
