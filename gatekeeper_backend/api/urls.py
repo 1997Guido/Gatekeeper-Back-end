@@ -13,6 +13,8 @@ from .views import UsernameViewApi
 from .views import EventDeleteApi
 from .views import EventInviteApi
 from .views import ViewSingleEvent
+from .views import getInvitedUsers
+from .views import UsernameViewApi
 urlpatterns = [
     path('profiles', UserProfileView.as_view()),
     path('qrcodegeneratorapi', QrCodeGeneratorApi),
@@ -28,5 +30,6 @@ urlpatterns = [
     path('eventdeleteapi', EventDeleteApi),
     path('eventinviteapi', EventInviteApi),
     path('viewsingleevent', ViewSingleEvent.as_view()),
-    
+    path('getinvitedusers', getInvitedUsers),
+    path('usernameviewapi', UsernameViewApi.as_view()),
 ]
