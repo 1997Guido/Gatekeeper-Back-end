@@ -252,3 +252,4 @@ gatekeeper_backend/api/migrations/__pycache__/0019_remove_event_eventduration.cp
 gatekeeper_backend/api/migrations/__pycache__/0020_alter_event_eventowner.cpython-311.pyc
 gatekeeper_backend/gatekeeper_backend/__pycache__/wsgi.cpython-311.pyc
 *.pyc
+*.pyc

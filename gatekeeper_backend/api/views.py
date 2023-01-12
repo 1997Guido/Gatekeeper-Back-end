@@ -45,7 +45,7 @@ def EventEditApi(request):
 
 def EventDeleteApi(request):
     data = json.loads(request.body)
-    event = Event.objects.get(pk=data["pk"])
+    event = Event.objects.get(pk=data["eventpk"])
     if request.user.pk == event.EventOwner.pk:
         event.delete()
         return HttpResponse("Event deleted")
