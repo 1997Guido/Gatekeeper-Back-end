@@ -20,11 +20,11 @@ def QrCodeVerificator(user, request):
 
     qrdata = json.loads(request.body.decode("utf-8"))["encryptedqrdata"]
     
-    #eventpk = json.loads(request.body.decode("utf-8"))["event"]
+    eventpk = json.loads(request.body.decode("utf-8"))["event"]
     
-    #event = Event.objects.get(pk=eventpk)
+    event = Event.objects.get(pk=eventpk)
     
-    #guestlist = (list(event.EventInvitedGuests.values()))
+    guestlist = (list(event.EventInvitedGuests.values()))
     
     
     QrData = str(qrdata).encode('utf-8')
@@ -39,7 +39,8 @@ def QrCodeVerificator(user, request):
         check = "True"
         notjsondata = {
         "userdata": user,
-        "check": check
+        "check": check,
+        "guestlist": guestlist,
         }
         
         jsondata = json.dumps(notjsondata, default=str)
