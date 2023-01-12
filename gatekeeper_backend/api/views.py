@@ -56,10 +56,16 @@ def EventInviteApi(request):
     data = json.loads(request.body)
     event = Event.objects.get(pk=data["pk"])
     if request.user.pk == event.EventOwner.pk:
-        for value in data["invitedUsers"]:
-            user = UserProfile.objects.get(username=value['label'])
-            event.EventInvitedGuests.add(user.pk)
-        return HttpResponse("Users invited")
+        if data["inv"] == "Uninvite":
+            for value in data["invitedUsers"]:
+                user = UserProfile.objects.get(username=value['label'])
+                event.EventInvitedGuests.remove(user.pk)
+            return HttpResponse("Users uninvited")
+        if data["inv"] == "Invite":
+            for value in data["invitedUsers"]:
+                user = UserProfile.objects.get(username=value['label'])
+                event.EventInvitedGuests.add(user.pk)
+            return HttpResponse("Users invited")
     else:
         return HttpResponse("You are not the owner of this event")
 
