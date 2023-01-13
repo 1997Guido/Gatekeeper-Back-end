@@ -12,7 +12,7 @@ from django.contrib.auth.models import AbstractUser
 
 
 class UserProfile(AbstractUser):
-    date_of_birth = models.DateField(null=True, blank=True)
+    date_of_birth = models.DateField(null=True, blank=True, )
     GENDER_CHOICES = (
     ('Male', 'Male'),
     ('Female', 'Female'),

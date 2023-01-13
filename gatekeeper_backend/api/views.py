@@ -39,7 +39,7 @@ def EventEditApi(request):
             serializer.save()
             return HttpResponse("Event edited")
         else:
-            return HttpResponse('error', serializer.errors)
+            return JsonResponse(serializer.errors)
     else:
         return HttpResponse("You are not the owner of this event")
 
