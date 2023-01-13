@@ -19,7 +19,7 @@ def QrCodeGeneratorApi(request):
     return HttpResponse(QrInfoLogic(request))
 
 def QrCodeVerificatorApi(request):
-    return HttpResponse(QrDecryptionLogic(request))
+    return HttpResponse(QrCodeVerificatorApi(request))
 
 def QrCodeScannerApi(request):
     return HttpResponse(QrCodeScanner())
