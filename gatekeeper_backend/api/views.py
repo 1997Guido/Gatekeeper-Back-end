@@ -6,8 +6,8 @@ from .serializers import EventSerializer
 from django.http import HttpResponse
 from .functions.ProfileLogic import ProfileLogic
 from .functions.QrInfoLogic import QrInfoLogic
-from .functions.QrDecryptionLogic import QrDecryptionLogic
 from .functions.QrCodeScanner import QrCodeScanner
+from .functions.QrCodeVerificator import QrCodeVerificator
 from .functions.AuthCheck import AuthCheck
 from django.http import JsonResponse
 from .models import UserProfile
@@ -19,7 +19,7 @@ def QrCodeGeneratorApi(request):
     return HttpResponse(QrInfoLogic(request))
 
 def QrCodeVerificatorApi(request):
-    return HttpResponse(QrCodeVerificatorApi(request))
+    return HttpResponse(QrCodeVerificator(request))
 
 def QrCodeScannerApi(request):
     return HttpResponse(QrCodeScanner())

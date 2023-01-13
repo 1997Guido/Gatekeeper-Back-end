@@ -4,47 +4,40 @@ from cryptography.fernet import Fernet
 import json
 
 def QrCodeVerificator(request):
+    qrdata = json.loads(request.body.decode("utf-8"))["encryptedqrdata"]
     
     eventpk = json.loads(request.body.decode("utf-8"))["event"]
     
-    event = Event.objects.filter(pk=eventpk)
+    event = Event.objects.get(pk=eventpk)
     
-    guestlist = (list(event.EventInvitedGuests.values("pk")))
+    guestlist = (list(event.EventInvitedGuests.values()))
     
-
-    qrdata = json.loads(request.body.decode("utf-8"))["encryptedqrdata"]
     
     QrData = str(qrdata).encode('utf-8')
-        
     key = "rTFB13nkI4mt76RMiJOpoNZS_aa5LUNyJIJ4BPlbPEY="
     f = Fernet(key)
-        
+    
     QrDataDecrypted = f.decrypt(QrData)
+    
     QrDataDecrypted = QrDataDecrypted.decode('utf-8')
     
-    user = UserProfile.objects.filter(QrUid=QrDataDecrypted)
+    user = UserProfile.objects.get(QrUid=QrDataDecrypted)
+    #userobject = (list(user.values()))
     
-           
-
+    if QrDataDecrypted == user.QrUid:
+        check = "True"
+        notjsondata = {
+        #"user": userobject,
+        "userdata": {
+        "first_name": user.first_name,
+        "last_name": user.last_name,
+        "date_of_birth": user.date_of_birth,
+        "gender": user.gender,
+        },
+        "guestlist": guestlist,
+        "check": check
+        }
         
-    check = "True"
-    notjsondata = {
-    "userdata": user,
-    "check": check,
-    }
-                        
     jsondata = json.dumps(notjsondata, default=str)
     
-pkcheck = False
-for value in guestlist:
-    if value["pk"] == user.pk:
-        pkcheck = True
-        break
-    else:
-        pkcheck = False
-            
-            
-if pkcheck == True:                
     return (jsondata)
-else:
-    return ("False")
