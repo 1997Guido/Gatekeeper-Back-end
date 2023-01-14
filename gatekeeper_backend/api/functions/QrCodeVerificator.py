@@ -3,21 +3,7 @@ from ..models import Event
 from cryptography.fernet import Fernet
 import json
 
-def QrCodeVerificator(user, request):
-    uid = UserProfile.objects.get(pk=user["pk"]).QrUid
-    user = (
-    UserProfile.objects.filter(pk=request.user.pk)
-    .values(
-        "first_name",
-        "last_name",
-        "gender",
-        "date_of_birth"
-        )
-        .first()
-    )
-    
-    
-
+def QrCodeVerificator(request):
     qrdata = json.loads(request.body.decode("utf-8"))["encryptedqrdata"]
     
     eventpk = json.loads(request.body.decode("utf-8"))["event"]
@@ -35,16 +21,23 @@ def QrCodeVerificator(user, request):
     
     QrDataDecrypted = QrDataDecrypted.decode('utf-8')
     
-    if QrDataDecrypted == uid:
+    user = UserProfile.objects.get(QrUid=QrDataDecrypted)
+    #userobject = (list(user.values()))
+    
+    if QrDataDecrypted == user.QrUid:
         check = "True"
         notjsondata = {
-        "userdata": user,
-        "check": check,
+        #"user": userobject,
+        "userdata": {
+        "first_name": user.first_name,
+        "last_name": user.last_name,
+        "date_of_birth": user.date_of_birth,
+        "gender": user.gender,
+        },
         "guestlist": guestlist,
+        "check": check
         }
         
-        jsondata = json.dumps(notjsondata, default=str)
-        
-        return (jsondata)
-    else:
-        return (False)
+    jsondata = json.dumps(notjsondata, default=str)
+    
+    return (jsondata)
