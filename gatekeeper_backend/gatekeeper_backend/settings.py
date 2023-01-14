@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
-
+from datetime import timedelta
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -35,6 +35,7 @@ ALLOWED_HOSTS = [
 CORS_ALLOW_METHODS = [
     "GET",
     "POST",
+    "PUT",
 ]
 CORS_ALLOW_HEADERS = [
     "accept",
@@ -53,7 +54,13 @@ CORS_ALLOW_CREDENTIALS = True
 CSRF_TRUSTED_ORIGINS = ['http://*.localhost:3000','http://*.127.0.0.1', 'http://127.0.0.1:3000', 'http://localhost:3000']
 # Application definition
 ACCOUNT_LOGOUT_ON_GET = True
+
+GRAPH_MODELS ={
+    'all_applications': True,
+    'graph_models': True,
+     }
 INSTALLED_APPS = [
+    'django_extensions',
     'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -104,7 +111,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'gatekeeper_backend.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
@@ -172,4 +178,8 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 SESSION_COOKIE_AGE = 24 * 3600
 REST_AUTH_REGISTER_SERIALIZERS = {
     'REGISTER_SERIALIZER': 'api.serializers.CustomRegisterSerializer'
+}
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }

@@ -12,7 +12,7 @@ from django.contrib.auth.models import AbstractUser
 
 
 class UserProfile(AbstractUser):
-    date_of_birth = models.DateField(null=True, blank=True)
+    date_of_birth = models.DateField(null=True, blank=True, )
     GENDER_CHOICES = (
     ('Male', 'Male'),
     ('Female', 'Female'),
@@ -20,5 +20,24 @@ class UserProfile(AbstractUser):
     )
     gender = models.CharField(max_length=15, choices=GENDER_CHOICES, default=False, null=False)
     QrUid = models.CharField(max_length=8, null=False, default=0)
+
+class Event(models.Model):
+    EventOwner = models.ForeignKey(UserProfile, on_delete=models.CASCADE, blank=True, null=True)
+    EventTitle = models.CharField(max_length=50, null=False)
+    EventDate = models.DateField(null=False)
+    EventTimeStart = models.TimeField(null=False)
+    EventTimeEnd = models.TimeField(null=False)
+    EventLocation = models.CharField(max_length=50, null=False)
+    EventDescription = models.CharField(max_length=100, null=False)
+    EventInvitedGuests = models.ManyToManyField(UserProfile, related_name='EventGuests', blank=True)
+    EventIsPrivate = models.BooleanField(default=False)
+    EventIsCancelled = models.BooleanField(default=False)
+    EventIsFree = models.BooleanField(default=False)
+    EventPrice = models.DecimalField(max_digits=5, decimal_places=2,default=0, blank=True)
+    EventMaxGuests = models.IntegerField(null=False, default=50)
+    EventCurrentGuests = models.IntegerField(null=False, default=0)
+    EventMinimumAge = models.IntegerField(null=False, default=0)
+    EventOrganizer = models.CharField(max_length=50)
     def __str__(self):
-        return self.username
+        return self.EventTitle
+

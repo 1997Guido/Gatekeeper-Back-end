@@ -13,9 +13,9 @@ def QrCodeGenerator(user):
             if UserProfile.objects.filter(QrUid=uid).exists():
                 continue
             else:
+                UserProfile.objects.filter(pk=user["pk"]).update(QrUid=uid)
                 break
 
-    UserProfile.objects.filter(pk=user["pk"]).update(QrUid=uid)
     
     id = UserProfile.objects.get(pk=user["pk"]).QrUid
     
