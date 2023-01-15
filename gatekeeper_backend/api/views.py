@@ -3,6 +3,8 @@ from rest_framework import viewsets
 from .serializers import UserProfileSerializer
 from .serializers import UserNameSerializer
 from .serializers import EventSerializer
+from .serializers import ImageSerializer
+from rest_framework import status
 from django.http import HttpResponse
 from .functions.ProfileLogic import ProfileLogic
 from .functions.QrInfoLogic import QrInfoLogic
@@ -10,8 +12,12 @@ from .functions.QrCodeScanner import QrCodeScanner
 from .functions.QrCodeVerificator import QrCodeVerificator
 from .functions.AuthCheck import AuthCheck
 from django.http import JsonResponse
+from rest_framework.response import Response
 from .models import UserProfile
 from .models import Event
+from .models import Image
+from rest_framework.views import APIView
+from rest_framework.parsers import MultiPartParser, FormParser
 import json
 # These are views(functions) which are ran when the frontend calls their specified paths(in urls.py)
 # They are called by the frontend using the axios library
@@ -127,3 +133,20 @@ class ProfileEditApi(generics.UpdateAPIView):
     serializer_def = UserProfileSerializer
     def get_object(self):
         return UserProfile.objects.get(pk=self.request.user.pk)
+
+class ImageViewApi(APIView):
+    parser_classes = (MultiPartParser, FormParser)
+
+    def get(self, request, *args, **kwargs):
+        Images = Image.objects.all()
+        serializer = ImageSerializer(Images, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, *args, **kwargs):
+        Images_serializer = ImageSerializer(data=request.data)
+        if Images_serializer.is_valid():
+            Images_serializer.save()
+            return Response(Images_serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            print('error', Images_serializer.errors)
+            return Response(Images_serializer.errors, status=status.HTTP_400_BAD_REQUEST)

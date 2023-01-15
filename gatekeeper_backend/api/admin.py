@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-
+from .models import Image
 from .models import UserProfile
 from .models import Event
 #With list_display u can configure which fields should be shown when looking at a list of records in the User table
@@ -25,3 +25,4 @@ class CustomUserAdmin(UserAdmin):
     )
 admin.site.register(Event)
 admin.site.register(UserProfile, CustomUserAdmin)
+admin.site.register(Image)
