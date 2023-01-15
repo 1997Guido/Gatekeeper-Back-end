@@ -12,8 +12,11 @@ from .functions.AuthCheck import AuthCheck
 from django.http import JsonResponse
 from .models import UserProfile
 from .models import Event
-# These are views(functions) which are ran when the frontend calls their specified paths(in urls.py)
 import json
+# These are views(functions) which are ran when the frontend calls their specified paths(in urls.py)
+# They are called by the frontend using the axios library
+
+
 
 def QrCodeGeneratorApi(request):
     return HttpResponse(QrInfoLogic(request))
@@ -85,7 +88,11 @@ class EventViewApi(generics.ListAPIView):
 class UserProfileView(generics.ListAPIView):
     serializer_class = UserProfileSerializer
     serializer_def = UserProfileSerializer
-    queryset = UserProfile.objects.all()
+    def get_queryset(self):
+        if self.request.query_params.get('allusers') == 'yes':
+            return UserProfile.objects.all()
+        if self.request.query_params.get('allusers') == 'me':
+            return UserProfile.objects.filter(pk=self.request.user.pk)
 
 class EventViewApiPersonal(generics.ListAPIView):
     serializer_class = EventSerializer
@@ -113,3 +120,10 @@ class UsernameViewApi(generics.ListAPIView):
             return UserProfile.objects.all()
         if self.request.query_params.get('allusers') == 'me':
             return UserProfile.objects.filter(pk=self.request.user.pk)
+
+
+class ProfileEditApi(generics.UpdateAPIView):
+    serializer_class = UserProfileSerializer
+    serializer_def = UserProfileSerializer
+    def get_object(self):
+        return UserProfile.objects.get(pk=self.request.user.pk)
