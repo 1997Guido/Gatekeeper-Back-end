@@ -6,7 +6,6 @@ from .serializers import EventSerializer
 from .serializers import ImageSerializer
 from rest_framework import status
 from django.http import HttpResponse
-from .functions.ProfileLogic import ProfileLogic
 from .functions.QrInfoLogic import QrInfoLogic
 from .functions.QrCodeScanner import QrCodeScanner
 from .functions.QrCodeVerificator import QrCodeVerificator

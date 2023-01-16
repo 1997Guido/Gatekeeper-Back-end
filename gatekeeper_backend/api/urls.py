@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 
 # These are the paths which the frontend calls
@@ -22,5 +22,4 @@ urlpatterns = [
     path('getinvitedusers', views.getInvitedUsers),
     path('usernameviewapi', views.UsernameViewApi.as_view()),
     path('profileeditapi', views.ProfileEditApi.as_view()),
-    path('images/', views.ImageViewApi.as_view(), name= 'images_list'),
 ]

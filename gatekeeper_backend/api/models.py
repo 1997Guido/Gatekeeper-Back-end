@@ -22,6 +22,7 @@ class UserProfile(AbstractUser):
     )
     gender = models.CharField(max_length=15, choices=GENDER_CHOICES, default=False, null=False)
     QrUid = models.CharField(max_length=8, null=False, default=0)
+    profilepicture = models.ImageField(upload_to='profile_images', null=True, blank=True)
 
 #This is the model for our Events.
 #The EventInvitedGuests field is a many to many field which allows a user to invite other users to an event.
@@ -51,11 +52,10 @@ class Event(models.Model):
 #The LinkedToEvent field is a foreign key which allows us to link an image to an event.
 
 class Image(models.Model):
-    Image = models.ImageField(upload_to='post_images', null=False, blank=False)
+    Image = models.ImageField(upload_to='images', null=False, blank=False)
     Title = models.CharField(max_length=50, null=False, default='Image')
     Description = models.CharField(max_length=100, null=True)
     Owner = models.ForeignKey(UserProfile, on_delete=models.CASCADE, blank=True, null=True)
-    LinkedToEvent = models.ForeignKey(Event, on_delete=models.CASCADE, blank=True, null=True)
     def __str__(self):
         return self.Title
 
