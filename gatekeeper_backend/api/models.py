@@ -29,7 +29,7 @@ class UserProfile(AbstractUser):
 
 class Event(models.Model):
     EventOwner = models.ForeignKey(UserProfile, on_delete=models.CASCADE, blank=True, null=True)
-    EventTitle = models.CharField(max_length=50, null=False)
+    EventTitle = models.CharField(max_length=12, null=False)
     EventDate = models.DateField(null=False)
     EventTimeStart = models.TimeField(null=False)
     EventTimeEnd = models.TimeField(null=False)
