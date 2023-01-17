@@ -35,9 +35,6 @@ def QrCodeScannerApi(request):
 def AuthCheckApi(request):
     return HttpResponse(AuthCheck(request))
 
-def ProfileApi(request):
-    return JsonResponse(ProfileLogic(request),safe=False)
-
 def EventEditApi(request):
     data = json.loads(request.body)
     event = Event.objects.get(pk=data["pk"])
