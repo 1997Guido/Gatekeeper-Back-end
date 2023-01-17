@@ -7,12 +7,12 @@ from .serializers import ImageSerializer
 from rest_framework import status
 from django.http import HttpResponse
 from .functions.QrInfoLogic import QrInfoLogic
-from .functions.QrCodeScanner import QrCodeScanner
 from .functions.QrCodeVerificator import QrCodeVerificator
 from .functions.AuthCheck import AuthCheck
 from django.http import JsonResponse
 from rest_framework.response import Response
 from .models import UserProfile
+from .functions.QrCodeGenerator import QrCodeGenerator
 from .models import Event
 from .models import Image
 from rest_framework.views import APIView
@@ -24,13 +24,10 @@ import json
 
 
 def QrCodeGeneratorApi(request):
-    return HttpResponse(QrInfoLogic(request))
+    return HttpResponse(QrCodeGenerator(request))
 
 def QrCodeVerificatorApi(request):
     return HttpResponse(QrCodeVerificator(request))
-
-def QrCodeScannerApi(request):
-    return HttpResponse(QrCodeScanner())
 
 def AuthCheckApi(request):
     return HttpResponse(AuthCheck(request))
