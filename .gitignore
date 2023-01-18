@@ -256,3 +256,4 @@ gatekeeper_backend/gatekeeper_backend/__pycache__/wsgi.cpython-311.pyc
 *.pyc
 *.pyc
 *.pyc
+*.pyc

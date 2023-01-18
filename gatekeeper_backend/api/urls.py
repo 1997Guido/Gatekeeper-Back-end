@@ -7,7 +7,6 @@ from . import views
 urlpatterns = [
     path('profiles', views.UserProfileView.as_view()),
     path('qrcodegeneratorapi', views.QrCodeGeneratorApi),
-    path('qrcodescannerapi', views.QrCodeScannerApi),
     path('profileapi', views.UserProfileView.as_view()),
     path('authcheck', views.AuthCheckApi),
     path('qrcodeverificatorapi', views.QrCodeVerificatorApi),
