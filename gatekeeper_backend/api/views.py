@@ -17,10 +17,10 @@ from .models import Image
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser
 import json
+
+
 # These are views(functions) which are ran when the frontend calls their specified paths(in urls.py)
 # They are called by the frontend using the axios library
-
-
 
 def QrCodeGeneratorApi(request):
     return HttpResponse(QrCodeGenerator(request))

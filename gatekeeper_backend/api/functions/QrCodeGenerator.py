@@ -4,10 +4,13 @@ import qrcode
 from cryptography.fernet import Fernet
 
 
-# QrCodeGenerator takes the request from the frontend and generates a qr code for the user.
-# It then saves the qr code in the database and returns the qr code to the frontend.
+# QrCodeGenerator takes the request from the frontend and generates a unique code for the user.
+# It then saves the qr code in the database.
+# This code is then encrypted and returned to the frontend.
+# The frontend then converts the data into a QR code and displays it to the user.
 
 def QrCodeGenerator(request):
+    # Length must be the same as the length of the QrUid charfield in the database.
     length = 16
     uid = UserProfile.objects.get(pk=request.user.pk).QrUid
         
@@ -23,11 +26,10 @@ def QrCodeGenerator(request):
     
     id = UserProfile.objects.get(pk=request.user.pk).QrUid
 
-    # The qr code is encrypted here.  
+    # The qr code is encrypted here using Fernet.  
     UserData = str(id).encode('utf-8')
     key = "rTFB13nkI4mt76RMiJOpoNZS_aa5LUNyJIJ4BPlbPEY="
-    f = Fernet(key)
-    
+    f = Fernet(key) 
     UserDataEncrypted = f.encrypt(UserData)
     
     return (UserDataEncrypted)

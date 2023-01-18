@@ -24,6 +24,7 @@ def QrCodeVerificator(request):
     for value in userlist:
         guestlist.append(value["id"])
     
+    # Here the qr data is decrypted.
     QrData = str(qrdata).encode('utf-8')
     key = "rTFB13nkI4mt76RMiJOpoNZS_aa5LUNyJIJ4BPlbPEY="
     f = Fernet(key)
@@ -32,6 +33,7 @@ def QrCodeVerificator(request):
     
     QrDataDecrypted = QrDataDecrypted.decode('utf-8')
     
+    # This gets the user that is linked to the scanned qr code from the database.
     user = UserProfile.objects.get(QrUid=QrDataDecrypted)
 
     guestcheck = False
@@ -41,6 +43,7 @@ def QrCodeVerificator(request):
         guestcheck = True
 
     if QrDataDecrypted == user.QrUid:
+        # If the user is invited to the event, it returns the user data, a check value of true and an invited value of true to the frontend.
         if guestcheck == True:
             check = "true"
             notjsondata = {
@@ -50,21 +53,25 @@ def QrCodeVerificator(request):
             "date_of_birth": user.date_of_birth,
             "gender": user.gender,
             },
-            "guestlist": guestlist,
             "check": check,
-            "userpk": user.pk,
+            "invited": "true"
             }
+        # If the user is not invited to the event, it returns a invited value of false.
         else:
-            check = "false"
+            check = "true"
             notjsondata = {
-            "check": check
+            "check": check,
+            "invited": "false"
             }
+    # If the qr data does not match the user in the database, it returns a check value of false.
     else:
         check = "false"
         notjsondata = {
-        "check": check
+        "check": check,
+        "user not found": "User not Found" 
         }
         
+    # Convert the data to json.
     jsondata = json.dumps(notjsondata, default=str)
     
     return (jsondata)

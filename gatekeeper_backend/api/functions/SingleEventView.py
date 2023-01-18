@@ -2,6 +2,8 @@ from ..models import UserProfile
 from ..models import Event
 import json
 
+# Logic for viewing a single event
+
 def SingleEventView(request):
     pkdata= json.loads(request.body)
     event = (
