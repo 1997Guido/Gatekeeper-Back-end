@@ -53,8 +53,8 @@ def QrCodeVerificator(request):
             "date_of_birth": user.date_of_birth,
             "gender": user.gender,
             },
+            "invited": "true",
             "check": check,
-            "invited": "true"
             }
         # If the user is not invited to the event, it returns a invited value of false.
         else:
