@@ -17,6 +17,9 @@ from .models import Image
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser
 import json
+from rest_framework import permissions
+
+
 # These are views(functions) which are ran when the frontend calls their specified paths(in urls.py)
 # They are called by the frontend using the axios library
 
@@ -142,3 +145,6 @@ class ImageViewApi(APIView):
         else:
             print('error', Images_serializer.errors)
             return Response(Images_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def perform_create(self, serializer):
+        serializer.save(ImageOwner=self.request.user)
