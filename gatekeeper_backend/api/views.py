@@ -81,25 +81,36 @@ class EventCreationApi(generics.CreateAPIView):
     def perform_create(self, serializer):
         serializer.save(EventOwner=self.request.user)
 
+
+
 class EventViewApi(generics.ListAPIView):
     serializer_class = EventSerializer
     serializer_def = EventSerializer
     queryset = Event.objects.all()
+
+
 
 class UserProfileView(generics.ListAPIView):
     serializer_class = UserProfileSerializer
     serializer_def = UserProfileSerializer
     def get_queryset(self):
         if self.request.query_params.get('allusers') == 'yes':
-            return UserProfile.objects.all()
+            return (UserProfile.objects.all())
         if self.request.query_params.get('allusers') == 'me':
             return UserProfile.objects.filter(pk=self.request.user.pk)
+        if self.request.query_params.get('allusers') == 'picture':
+            user = UserProfile.objects.get(pk=self.request.user.pk)
+            return Image.objects.filter(pk=user.ProfilePicture)
+
+
 
 class EventViewApiPersonal(generics.ListAPIView):
     serializer_class = EventSerializer
     serializer_def = EventSerializer
     def get_queryset(self):
         return Event.objects.filter(EventOwner=self.request.user.pk)
+
+
 
 class ViewSingleEvent(generics.ListAPIView):
     serializer_class = EventSerializer
@@ -108,10 +119,15 @@ class ViewSingleEvent(generics.ListAPIView):
         event = Event.objects.filter(pk=self.request.query_params.get('pk'))
         return (event)
 
+
+
 def getInvitedUsers(request):
     data = json.loads(request.body)
     event = Event.objects.get(pk=data["pk"])
     return JsonResponse(list(event.EventInvitedGuests.values()),safe=False)
+
+
+
 
 class UsernameViewApi(generics.ListAPIView):
     serializer_class = UserNameSerializer
@@ -123,17 +139,31 @@ class UsernameViewApi(generics.ListAPIView):
             return UserProfile.objects.filter(pk=self.request.user.pk)
 
 
+
+
 class ProfileEditApi(generics.UpdateAPIView):
     serializer_class = UserProfileSerializer
     serializer_def = UserProfileSerializer
     def get_object(self):
         return UserProfile.objects.get(pk=self.request.user.pk)
 
+
+
+def SetProfileImage(request):
+    data = json.loads(request.body)
+    user = UserProfile.objects.get(pk=request.user.pk)
+    image = Image.objects.get(pk=data["pictureid"])
+    user.ProfilePicture = image
+    user.save()
+    return HttpResponse("Profile image set")
+
+
+
 class ImageViewApi(APIView):
     parser_classes = (MultiPartParser, FormParser)
 
     def get(self, request, *args, **kwargs):
-        Images = Image.objects.all()
+        Images = Image.objects.filter(Owner=self.request.user.pk)
         serializer = ImageSerializer(Images, many=True)
         return Response(serializer.data)
 
@@ -141,10 +171,11 @@ class ImageViewApi(APIView):
         Images_serializer = ImageSerializer(data=request.data)
         if Images_serializer.is_valid():
             Images_serializer.save()
+            Images_serializer.save(Owner=self.request.user)
+            user = UserProfile.objects.get(pk=self.request.user.pk)
+            user.Images.set = Image.objects.filter(Owner=self.request.user.pk)
+            user.save()
             return Response(Images_serializer.data, status=status.HTTP_201_CREATED)
         else:
             print('error', Images_serializer.errors)
             return Response(Images_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def perform_create(self, serializer):
-        serializer.save(ImageOwner=self.request.user)

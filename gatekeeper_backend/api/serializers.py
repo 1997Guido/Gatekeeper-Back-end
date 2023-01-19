@@ -29,7 +29,7 @@ class CustomRegisterSerializer(RegisterSerializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ('pk', 'first_name', 'last_name', 'date_of_birth', 'gender', 'email', 'username')
+        fields = ('pk', 'first_name', 'last_name', 'date_of_birth', 'gender', 'email', 'username', 'ProfilePicture')
 
 class UserNameSerializer(serializers.ModelSerializer):
     class Meta:
@@ -39,7 +39,7 @@ class UserNameSerializer(serializers.ModelSerializer):
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
-        fields = ('__all__')
+        fields = ('Image', 'Title', 'Description', 'Owner', 'id')
 
 class EventSerializer(serializers.ModelSerializer):
     class Meta:

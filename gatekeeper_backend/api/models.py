@@ -17,7 +17,8 @@ class UserProfile(AbstractUser):
     )
     gender = models.CharField(max_length=15, choices=GENDER_CHOICES, default=False, null=False)
     QrUid = models.CharField(max_length=8, null=False, default=0)
-    profilepicture = models.ImageField(upload_to='profile_images', null=True, blank=True)
+    Images = models.ManyToManyField('Image', related_name='UserImages', blank=True)
+    ProfilePicture = models.OneToOneField('Image', on_delete=models.SET_NULL, blank=True, null=True, related_name='ProfilePicture')
 
 #This is the model for our Events.
 #The EventInvitedGuests field is a many to many field which allows a user to invite other users to an event.
@@ -25,6 +26,7 @@ class UserProfile(AbstractUser):
 class Event(models.Model):
     EventOwner = models.ForeignKey(UserProfile, on_delete=models.CASCADE, blank=True, null=True)
     EventTitle = models.CharField(max_length=12, null=False)
+    EventBanner = models.ForeignKey('Image', on_delete=models.SET_NULL, blank=True, null=True, related_name='EventBanner')
     EventDate = models.DateField(null=False)
     EventTimeStart = models.TimeField(null=False)
     EventTimeEnd = models.TimeField(null=False)

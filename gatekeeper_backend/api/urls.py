@@ -22,4 +22,5 @@ urlpatterns = [
     path('usernameviewapi', views.UsernameViewApi.as_view()),
     path('profileeditapi', views.ProfileEditApi.as_view()),
     path('imageview', views.ImageViewApi.as_view()),
+    path('setprofileimage', views.SetProfileImage),
 ]
