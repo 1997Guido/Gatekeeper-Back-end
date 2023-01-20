@@ -258,3 +258,4 @@ gatekeeper_backend/gatekeeper_backend/__pycache__/wsgi.cpython-311.pyc
 *.pyc
 *.pyc
 *.pyc
+gatekeeper_backend/api/functions/__pycache__/QrCodeVerificator.cpython-311.pyc
