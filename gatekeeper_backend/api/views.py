@@ -163,9 +163,14 @@ class ImageViewApi(APIView):
     parser_classes = (MultiPartParser, FormParser)
 
     def get(self, request, *args, **kwargs):
-        Images = Image.objects.filter(Owner=self.request.user.pk)
-        serializer = ImageSerializer(Images, many=True)
-        return Response(serializer.data)
+        if self.request.query_params.get('allmypictures') == 'yes':
+            Images = Image.objects.filter(Owner=self.request.user.pk)
+            serializer = ImageSerializer(Images, many=True)
+            return Response(serializer.data)
+        if self.request.query_params.get('allmypictures') == 'profilepicture':
+            user = UserProfile.objects.get(pk=self.request.user.pk)
+            serializer = ImageSerializer(user.ProfilePicture)
+            return JsonResponse(serializer.data)
 
     def post(self, request, *args, **kwargs):
         Images_serializer = ImageSerializer(data=request.data)
@@ -175,7 +180,7 @@ class ImageViewApi(APIView):
             user = UserProfile.objects.get(pk=self.request.user.pk)
             user.Images.set = Image.objects.filter(Owner=self.request.user.pk)
             user.save()
-            return Response(Images_serializer.data, status=status.HTTP_201_CREATED)
+            return JsonResponse(Images_serializer.data, status=status.HTTP_201_CREATED)
         else:
             print('error', Images_serializer.errors)
             return Response(Images_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
