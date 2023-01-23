@@ -9,7 +9,10 @@ from django.contrib.auth.models import AbstractUser
 #Like age,gender and QrUid. the QrUid is the field for the unique id generated for each user in QrCodeGenerator.py
 
 class UserProfile(AbstractUser):
-    date_of_birth = models.DateField(null=True, blank=True, )
+    first_name = models.CharField(max_length=30, blank=False, null=False)
+    last_name = models.CharField(max_length=30, blank=False, null=False)
+    date_of_birth = models.DateField(null=False, blank=False, default='2000-01-01')
+    email = models.EmailField(max_length=254, blank=False, null=False)
     GENDER_CHOICES = (
     ('Male', 'Male'),
     ('Female', 'Female'),

@@ -147,7 +147,11 @@ class ProfileEditApi(generics.UpdateAPIView):
     def get_object(self):
         return UserProfile.objects.get(pk=self.request.user.pk)
 
-
+class ProfileDeleteApi(generics.DestroyAPIView):
+    serializer_class = UserProfileSerializer
+    serializer_def = UserProfileSerializer
+    def get_object(self):
+        return UserProfile.objects.get(pk=self.request.user.pk)
 
 def SetProfileImage(request):
     data = json.loads(request.body)
@@ -162,7 +166,7 @@ def SetProfileImage(request):
 class ImageViewApi(APIView):
     parser_classes = (MultiPartParser, FormParser)
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         if self.request.query_params.get('allmypictures') == 'yes':
             Images = Image.objects.filter(Owner=self.request.user.pk)
             serializer = ImageSerializer(Images, many=True)
@@ -172,7 +176,7 @@ class ImageViewApi(APIView):
             serializer = ImageSerializer(user.ProfilePicture)
             return JsonResponse(serializer.data)
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         Images_serializer = ImageSerializer(data=request.data)
         if Images_serializer.is_valid():
             Images_serializer.save()
@@ -183,4 +187,13 @@ class ImageViewApi(APIView):
             return JsonResponse(Images_serializer.data, status=status.HTTP_201_CREATED)
         else:
             print('error', Images_serializer.errors)
-            return Response(Images_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return JsonResponse(Images_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request):
+        imagepk = self.request.query_params.get('pk')
+        image = Image.objects.get(pk=imagepk)
+        if image.Owner.pk == request.user.pk:
+            image.delete()
+            return HttpResponse("Image deleted")
+        else:
+            return HttpResponse("You are not the owner of this image")

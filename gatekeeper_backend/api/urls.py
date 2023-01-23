@@ -8,6 +8,7 @@ urlpatterns = [
     path('profiles', views.UserProfileView.as_view()),
     path('qrcodegeneratorapi', views.QrCodeGeneratorApi),
     path('profileapi', views.UserProfileView.as_view()),
+    path('profiledeleteapi', views.ProfileDeleteApi.as_view()),
     path('authcheck', views.AuthCheckApi),
     path('qrcodeverificatorapi', views.QrCodeVerificatorApi),
     path('eventcreationapi', views.EventCreationApi.as_view()),
