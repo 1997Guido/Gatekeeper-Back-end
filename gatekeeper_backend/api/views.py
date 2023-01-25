@@ -24,16 +24,26 @@ from rest_framework import permissions
 # They are called by the frontend using the axios library
 
 
-
+# This view runs the QrCodeGenerator function and returns the encrypted qr code to the frontend
 def QrCodeGeneratorApi(request):
     return HttpResponse(QrCodeGenerator(request))
 
+# This views runs the QrCodeVerificator function and returns the user data to the frontend
 def QrCodeVerificatorApi(request):
     return HttpResponse(QrCodeVerificator(request))
 
+# This view runs the AuthCheck function and returns a true if the user is authenticated and a false if the user is not authenticated
 def AuthCheckApi(request):
     return HttpResponse(AuthCheck(request))
 
+
+# This view is for editing a Event in the database
+# It is called by the frontend when the user edits an event
+# The frontend sends the data to the backend using a POST request
+# The data contains a PK which is the primary key of the event in the database the user wants to edit
+# It checks if the user is the owner of the event
+# If the user is the owner of the event, it saves the changes to the database
+# If the user is not the owner of the event, it returns a message to the frontend
 def EventEditApi(request):
     data = json.loads(request.body)
     event = Event.objects.get(pk=data["pk"])
@@ -47,6 +57,10 @@ def EventEditApi(request):
     else:
         return HttpResponse("You are not the owner of this event")
 
+
+# This view is for deleting a Event in the database
+# It is called by the frontend when the user deletes an event
+# The frontend sends the data to the backend using a POST request
 def EventDeleteApi(request):
     data = json.loads(request.body)
     event = Event.objects.get(pk=data["eventpk"])
@@ -55,7 +69,12 @@ def EventDeleteApi(request):
         return HttpResponse("Event deleted")
     else:
         return HttpResponse("You are not the owner of this event")
-    
+
+
+
+
+# This view handles invites and uninvites to and event in the database
+# It is called by the frontend when the user invites or uninvites a user to an event
 def EventInviteApi(request):
     data = json.loads(request.body)
     event = Event.objects.get(pk=data["pk"])
@@ -74,7 +93,9 @@ def EventInviteApi(request):
         return HttpResponse("You are not the owner of this event")
 
 
-
+# This is a class based view that handles Event creation
+# it is a subclass to the APIView class
+# the APIView class is a builtin class from the rest_framework library
 class EventCreationApi(generics.CreateAPIView):
     serializer_class = EventSerializer
     serializer_def = EventSerializer
@@ -82,14 +103,17 @@ class EventCreationApi(generics.CreateAPIView):
         serializer.save(EventOwner=self.request.user)
 
 
-
+# This is a class based view that handles Event viewing
 class EventViewApi(generics.ListAPIView):
     serializer_class = EventSerializer
     serializer_def = EventSerializer
     queryset = Event.objects.all()
 
 
-
+# This is a class based view that handles Profile viewing
+# If allusers is set to yes, it returns all users in the database
+# If allusers is set to me, it returns the user that is logged in
+# If allusers is set to picture, it returns the profilepicture(pk) of the user that is logged in
 class UserProfileView(generics.ListAPIView):
     serializer_class = UserProfileSerializer
     serializer_def = UserProfileSerializer
@@ -103,7 +127,7 @@ class UserProfileView(generics.ListAPIView):
             return Image.objects.filter(pk=user.ProfilePicture)
 
 
-
+# This is a class based view that returns all events the logged in user is owner of
 class EventViewApiPersonal(generics.ListAPIView):
     serializer_class = EventSerializer
     serializer_def = EventSerializer
@@ -111,7 +135,7 @@ class EventViewApiPersonal(generics.ListAPIView):
         return Event.objects.filter(EventOwner=self.request.user.pk)
 
 
-
+#this is a class based view that returns the event with the specified pk
 class ViewSingleEvent(generics.ListAPIView):
     serializer_class = EventSerializer
     serializer_def = EventSerializer
@@ -120,7 +144,7 @@ class ViewSingleEvent(generics.ListAPIView):
         return (event)
 
 
-
+# this is a class based view that returns a list of all users invited to the event that is specified by the pk
 def getInvitedUsers(request):
     data = json.loads(request.body)
     event = Event.objects.get(pk=data["pk"])
@@ -128,7 +152,7 @@ def getInvitedUsers(request):
 
 
 
-
+#
 class UsernameViewApi(generics.ListAPIView):
     serializer_class = UserNameSerializer
     serializer_def = UserNameSerializer

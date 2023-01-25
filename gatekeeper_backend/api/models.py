@@ -49,7 +49,9 @@ class Event(models.Model):
 
 #This is the model for our Images.
 #The Image field is a ImageField which allows us to upload images to our database.
-#The LinkedToEvent field is a foreign key which allows us to link an image to an event.
+#The Owner field is a foreign key which allows us to link the image to a user.
+#This is done so that we can display the images uploaded by a user on their profile page.
+#The Title and Description fields are just for the user to add a title and description to their image.
 
 class Image(models.Model):
     Image = models.ImageField(upload_to='images', null=False, blank=False)
