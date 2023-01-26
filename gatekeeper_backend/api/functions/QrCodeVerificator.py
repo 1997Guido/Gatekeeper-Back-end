@@ -91,6 +91,7 @@ def QrCodeVerificator(request):
         jsondata = json.dumps(notjsondata, default=str)
         
         return (jsondata)
+        
     except:
         check = "false"
         notjsondata2 = {
