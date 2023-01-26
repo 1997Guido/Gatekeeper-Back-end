@@ -5,7 +5,7 @@ from cryptography.fernet import Fernet
 
 
 # QrCodeGenerator takes the request from the frontend and generates a unique code for the user.
-# It then saves the qr code in the database.
+# It then saves the code in the database.
 # This code is then encrypted and returned to the frontend.
 # The frontend then converts the data into a QR code and displays it to the user.
 

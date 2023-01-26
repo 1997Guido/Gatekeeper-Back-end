@@ -9,7 +9,7 @@ import cryptography
 # QrCodeVerificator takes the request from the frontend and decrypts the encrypted qr data.
 # It then checks if the decrypted qr data matches the qr data of the user in the database.
 # If the qr data matches the user in the database, it checks if the user is invited to the event.
-# If the user is invited to the event, it returns the user data and the guestlist of the event.
+# If the user is invited to the event, it returns the user data to the frontend.
 # If the user is not invited to the event, it returns a check value of false.
 
 
