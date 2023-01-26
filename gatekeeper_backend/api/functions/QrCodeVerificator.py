@@ -1,5 +1,6 @@
 from ..models import UserProfile
 from ..models import Event
+from ..models import Image
 from cryptography.fernet import Fernet
 import json
 from binascii import Error
@@ -43,6 +44,14 @@ def QrCodeVerificator(request):
 
         guestcheck = False
 
+        # Get the profile picture of the user.
+        try:
+            image = Image.objects.get(pk=user.ProfilePicture_id)
+            imageurl = image.Image.url
+        except:
+            imageurl = None
+
+
         # This if statement checks if the user is invited to the event.
         if user.pk in guestlist:
             guestcheck = True
@@ -57,10 +66,12 @@ def QrCodeVerificator(request):
                 "last_name": user.last_name,
                 "date_of_birth": user.date_of_birth,
                 "gender": user.gender,
+                "imageurl": imageurl,
                 },
                 "invited": "true",
                 "check": check,
                 }
+
             # If the user is not invited to the event, it returns a invited value of false.
             else:
                 check = "true"
