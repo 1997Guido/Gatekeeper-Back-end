@@ -1,10 +1,12 @@
 from rest_framework import serializers
 from .models import UserProfile
 from .models import Event
+from .models import Image
 from dj_rest_auth.registration.serializers import RegisterSerializer
 
 
-#this code serializes our model so it can be show in a readable format. you can configure which fields to serialize
+# this code serializes our model so it can be show in a readable format. you can configure which fields to serialize
+# and how they are serialized
 
 class CustomRegisterSerializer(RegisterSerializer):
     first_name = serializers.CharField()
@@ -24,17 +26,20 @@ class CustomRegisterSerializer(RegisterSerializer):
             'gender': self.validated_data.get('gender', '')
         }
 
-
-
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ('first_name', 'last_name', 'date_of_birth', 'gender', 'email', 'username')
+        fields = ('pk', 'first_name', 'last_name', 'date_of_birth', 'gender', 'email', 'username', 'ProfilePicture')
 
 class UserNameSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         fields = ('id', 'username')
+
+class ImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Image
+        fields = ('Image', 'Title', 'Description', 'Owner', 'id')
 
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
