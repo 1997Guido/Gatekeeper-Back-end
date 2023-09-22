@@ -22,7 +22,6 @@ class Event(models.Model):
     EventMinimumAge = models.IntegerField(null=False, default=0)
     EventOrganizer = models.CharField(max_length=50)
 
-
     @property
     def invited_guests(self):
         return self.EventInvitedGuests.all()

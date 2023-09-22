@@ -14,6 +14,7 @@ from gatekeeper.users.models import User
 def QrCodeGenerator(request):
     # Length must be the same as the length of the QrUid charfield in the database.
     length = 16
+    
     uid = User.objects.get(pk=request.user.pk).QrUid
 
     if uid == "0":

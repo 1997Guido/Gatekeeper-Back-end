@@ -103,6 +103,7 @@ class EventViewApiPersonal(generics.ListAPIView):
         return Event.objects.filter(EventOwner=self.request.user.pk)
 
 
+
 class ViewSingleEvent(generics.ListAPIView):
     serializer_class = EventSerializer
     serializer_def = EventSerializer
@@ -110,6 +111,7 @@ class ViewSingleEvent(generics.ListAPIView):
     def get_queryset(self):
         event = Event.objects.filter(pk=self.request.query_params.get("pk"))
         return event
+
 
 
 def getInvitedUsers(request):
