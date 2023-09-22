@@ -3,7 +3,7 @@ import string
 
 from cryptography.fernet import Fernet
 
-from ..models import UserProfile
+from gatekeeper.users.models import User
 
 # QrCodeGenerator takes the request from the frontend and generates a unique code for the user.
 # It then saves the code in the database.
@@ -14,18 +14,19 @@ from ..models import UserProfile
 def QrCodeGenerator(request):
     # Length must be the same as the length of the QrUid charfield in the database.
     length = 16
-    uid = UserProfile.objects.get(pk=request.user.pk).QrUid
+    
+    uid = User.objects.get(pk=request.user.pk).QrUid
 
     if uid == "0":
         while True:
             uid = "".join(random.choices(string.ascii_uppercase, k=length))
-            if UserProfile.objects.filter(QrUid=uid).exists():
+            if User.objects.filter(QrUid=uid).exists():
                 continue
             else:
-                UserProfile.objects.filter(pk=request.user.pk).update(QrUid=uid)
+                User.objects.filter(pk=request.user.pk).update(QrUid=uid)
                 break
 
-    id = UserProfile.objects.get(pk=request.user.pk).QrUid
+    id = User.objects.get(pk=request.user.pk).QrUid
 
     # The qr code is encrypted here using Fernet.
     UserData = str(id).encode("utf-8")

@@ -2,7 +2,8 @@ import json
 
 from cryptography.fernet import Fernet
 
-from ..models import Event, Image, UserProfile
+from gatekeeper.api.models import Event, Image
+from gatekeeper.users.models import User
 
 # QrCodeVerificator takes the request from the frontend and decrypts the encrypted qr data.
 # It then checks if the decrypted qr data matches the qr data of the user in the database.
@@ -37,7 +38,7 @@ def QrCodeVerificator(request):
         QrDataDecrypted = QrDataDecrypted.decode("utf-8")
 
         # This gets the user that is linked to the scanned qr code from the database.
-        user = UserProfile.objects.get(QrUid=QrDataDecrypted)
+        user = User.objects.get(QrUid=QrDataDecrypted)
 
         guestcheck = False
 
