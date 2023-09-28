@@ -76,7 +76,7 @@ RUN chown django:django ${APP_HOME}
 USER django
 
 RUN DATABASE_URL="" \
-  DJANGO_SETTINGS_MODULE="config.settings.test" \
+  DJANGO_SETTINGS_MODULE="gatekeeper_backend.settings" \
   python manage.py compilemessages
 
 ENTRYPOINT ["/entrypoint"]

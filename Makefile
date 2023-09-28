@@ -16,7 +16,7 @@ pre-commit:
 	pre-commit run --all-files
 
 account:
-	DJANGO_SUPERUSER_PASSWORD=admin python manage.py createsuperuser --no-input --email admin@example.com --username admin
+	DJANGO_SUPERUSER_PASSWORD=admin manage.py createsuperuser --no-input --email admin@example.com --username admin
 
 format:
 	black gatekeeper

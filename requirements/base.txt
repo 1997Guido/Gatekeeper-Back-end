@@ -22,6 +22,7 @@ pyaes==1.6.1
 pycparser==2.21
 PyJWT==2.6.0
 python3-openid==3.2.0
+psycopg2==2.9.8
 pytz==2022.6
 qrcode==7.3.1
 raven==6.10.0
