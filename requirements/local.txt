@@ -1,5 +1,5 @@
 -r base.txt
--e ./gatekeeper_backend
+
 Werkzeug[watchdog]==2.3.7 # https://github.com/pallets/werkzeug
 ipdb==0.13.13  # https://github.com/gotcha/ipdb
 psycopg[c]==3.1.9  # https://github.com/psycopg/psycopg
