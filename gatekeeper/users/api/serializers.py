@@ -1,5 +1,6 @@
-from django.contrib.auth import get_user_model
 from dj_rest_auth.registration.serializers import RegisterSerializer
+from dj_rest_auth.serializers import LoginSerializer
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 from gatekeeper.users.models import User as UserType
@@ -16,7 +17,12 @@ class UserSerializer(serializers.ModelSerializer[UserType]):
             "url": {"view_name": "api:user-detail", "lookup_field": "username"},
         }
 
-class RegisterSerializer(RegisterSerializer):
+
+class CustomLoginSerializer(LoginSerializer):
+    email = None  # Remove the email field
+
+
+class CustomRegisterSerializer(RegisterSerializer):
     first_name = serializers.CharField()
     last_name = serializers.CharField()
     date_of_birth = serializers.DateField()

@@ -2,13 +2,15 @@ from django.urls import path
 
 from . import views
 
+# Copyright © 2023, Mike Vermeer & Guido Erdtsieck, All rights reserved.
+
 # These are the paths which the frontend calls
 # They are called by the frontend using the axios library
 
 urlpatterns = [
-    path("profiles", views.UserProfileView.as_view()),
+    path("profiles", views.UserView.as_view()),
     path("qrcodegeneratorapi", views.QrCodeGeneratorApi),
-    path("profileapi", views.UserProfileView.as_view()),
+    path("profileapi", views.UserView.as_view()),
     path("profiledeleteapi", views.ProfileDeleteApi.as_view()),
     path("authcheck", views.AuthCheckApi),
     path("qrcodeverificatorapi", views.QrCodeVerificatorApi),

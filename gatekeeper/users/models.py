@@ -1,5 +1,5 @@
 from django.contrib.auth.models import AbstractUser
-from django.db.models import CharField, DateField, EmailField
+from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
@@ -12,18 +12,21 @@ class User(AbstractUser):
     """
 
     # First and last name do not cover name patterns around the globe
-    name = CharField(_("Name of User"), blank=True, max_length=255)
-    first_name = CharField(max_length=30, blank=False, null=False, default="John")
-    last_name = CharField(max_length=30, blank=False, null=False, default="Doe")
-    date_of_birth = DateField(null=False, blank=False, default="2000-01-01")
-    email = EmailField(max_length=254, blank=False, null=False)
+    name = models.CharField(_("Name of User"), blank=True, max_length=255)
+    first_name = models.CharField(max_length=30, blank=False, null=False, default="John")
+    last_name = models.CharField(max_length=30, blank=False, null=False, default="Doe")
+    date_of_birth = models.DateField(null=False, blank=False, default="2000-01-01")
+    email = models.EmailField(max_length=254, blank=False, null=False)
     GENDER_CHOICES = (
         ("Male", "Male"),
         ("Female", "Female"),
         ("Undefined", "Undefined"),
     )
-    gender = CharField(max_length=15, choices=GENDER_CHOICES, default=False, null=False)
-    QrUid = CharField(max_length=8, null=False, default=0)
+    gender = models.CharField(max_length=15, choices=GENDER_CHOICES, default=False, null=False)
+    QrUid = models.CharField(max_length=8, null=False, default=0)
+    ProfilePicture = models.ForeignKey(
+        "api.Image", on_delete=models.SET_NULL, blank=True, null=True, related_name="profile_pictures"
+    )
 
     def get_absolute_url(self) -> str:
         """Get URL for user's detail view.

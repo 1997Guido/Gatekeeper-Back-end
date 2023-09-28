@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from gatekeeper.api.models import Event, Image
 
+
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
