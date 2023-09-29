@@ -1,22 +1,22 @@
 import json
+import stat
 
 from django.http import HttpResponse, JsonResponse
-from rest_framework import generics, permissions, status, viewsets
+from requests import delete
+from rest_framework import generics, status
 from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .functions.AuthCheck import AuthCheck
-from .functions.QrCodeGenerator import QrCodeGenerator
-from .functions.QrCodeVerificator import QrCodeVerificator
-from .models import Event, Image, User
-from .serializers import (EventSerializer, ImageSerializer, UserNameSerializer,
+from api.functions.AuthCheck import AuthCheck
+from api.functions.QrCodeGenerator import QrCodeGenerator
+from api.functions.QrCodeGenerator import QrCodeGenerator
+from api.functions.QrCodeVerificator import QrCodeVerificator
+from api.models import Event, Image, User
+from api.serializers import (EventSerializer, ImageSerializer, UserNameSerializer,
                           UserSerializer)
-
-# These are views(functions) which are ran when the frontend calls their specified paths(in urls.py)
-# They are called by the frontend using the axios library
-
-
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponse, JsonResponse
 # This view runs the QrCodeGenerator function and returns the encrypted qr code to the frontend
 def QrCodeGeneratorApi(request):
     return HttpResponse(QrCodeGenerator(request))
@@ -32,13 +32,83 @@ def AuthCheckApi(request):
     return HttpResponse(AuthCheck(request))
 
 
-# This view is for editing a Event in the database
-# It is called by the frontend when the user edits an event
-# The frontend sends the data to the backend using a POST request
-# The data contains a PK which is the primary key of the event in the database the user wants to edit
-# It checks if the user is the owner of the event
-# If the user is the owner of the event, it saves the changes to the database
-# If the user is not the owner of the event, it returns a message to the frontend
+
+class EventCreateView(generics.CreateAPIView):
+    serializer_class = EventSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.validated_data['EventOwner'] = request.user
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class EventListView(generics.ListAPIView):
+    serializer_class = EventSerializer
+
+    def get_queryset(self):
+        queryset = Event.objects.all()
+        param = self.request.query_params.get("show", None)
+
+        if param:
+            match param:
+                case "all":
+                    pass
+                case "invited":
+                    queryset = queryset.filter(EventInvitedGuests__pk=self.request.user.pk)
+                case "single":
+                    pk = self.kwargs.get("pk", None)
+                    if pk is not None:
+                        queryset = queryset.filter(pk=pk)
+                case "owned":
+                    queryset = queryset.filter(EventOwner=self.request.user.pk)
+
+        return queryset
+
+class EventDelete(generics.DestroyAPIView):
+    serializer_class = EventSerializer
+
+    def get_object(self):
+        obj = Event.objects.get(pk=self.kwargs['pk'])
+        return obj
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+
+        if instance.EventOwner == request.user:
+            self.perform_destroy(instance)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response({"error": "You are not the owner of this event"}, status=status.HTTP_403_FORBIDDEN)
+
+
+
+class EventEdit(generics.UpdateAPIView):
+    serializer_class = EventSerializer
+
+    def get_object(self):
+        obj = Event.objects.get(pk=self.kwargs['pk'])
+        return obj
+
+    def update(self, request, *args, **kwargs):
+
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            if instance.EventOwner == request.user:
+                serializer.save()
+                return Response(serializer.data)
+            else:
+                return Response({"error": "You are not the owner of this event"}, status=status.HTTP_403_FORBIDDEN)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
 
 
 def EventEditApi(request):
@@ -66,6 +136,17 @@ def EventDeleteApi(request):
         return HttpResponse("Event deleted")
     else:
         return HttpResponse("You are not the owner of this event")
+    
+class EventDelete(APIView):
+
+    def delete(self, request):
+        data = json.loads(request.body)
+        event = Event.objects.get(pk=data["eventpk"])
+        if request.user.pk == event.EventOwner.pk:
+            event.delete()
+            return HttpResponse("Event deleted")
+        else:
+            return HttpResponse("You are not the owner of this event")
 
 
 # This view handles invites and uninvites to and event in the database
@@ -91,19 +172,6 @@ def EventInviteApi(request):
 # This is a class based view that handles Event creation
 # it is a subclass to the APIView class
 # the APIView class is a builtin class from the rest_framework library
-class EventCreationApi(generics.CreateAPIView):
-    serializer_class = EventSerializer
-    serializer_def = EventSerializer
-
-    def perform_create(self, serializer):
-        serializer.save(EventOwner=self.request.user)
-
-
-# This is a class based view that handles Event viewing
-class EventViewApi(generics.ListAPIView):
-    serializer_class = EventSerializer
-    serializer_def = EventSerializer
-    queryset = Event.objects.all()
 
 
 # This is a class based view that handles Profile viewing
