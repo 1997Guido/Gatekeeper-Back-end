@@ -1,4 +1,4 @@
-from django.urls import include, path
+from django.urls import path
 
 from . import views
 
@@ -6,23 +6,27 @@ from . import views
 # They are called by the frontend using the axios library
 
 urlpatterns = [
-    path("profiles", views.UserView.as_view()),
+    # Events
+    path("event/<int:pk>/", views.EventDetailView.as_view()),
+    path("eventslist/", views.EventListView.as_view()),
+    path("eventslist/<int:pk>/", views.EventListView.as_view()),
+    path("eventinvite/<int:pk>/", views.EventInviteView.as_view()),
+    path("eventuninvite/<int:pk>/", views.EventUninviteView.as_view()),
+    path("eventcreate", views.EventCreateView.as_view()),
+    path("eventupdate/<int:pk>/", views.EventUpdateView.as_view()),
+    path("eventdelete/<int:pk>/", views.EventDeleteView.as_view()),
+    # User
+    path("authcheck", views.AuthCheckView),
+    path("users", views.UserView.as_view()),
+    path("username", views.UsernameViewApi.as_view()),
+    path("userupdate", views.UserUpdateView.as_view()),
+    path("userdelete", views.UserDeleteView.as_view()),
+    # QR
     path("qrcodegeneratorapi", views.QrCodeGeneratorApi),
-    path("profileapi", views.UserView.as_view()),
-    path("profiledeleteapi", views.ProfileDeleteApi.as_view()),
-    path("authcheck", views.AuthCheckApi),
     path("qrcodeverificatorapi", views.QrCodeVerificatorApi),
-    path("eventcreationapi", views.EventCreationApi.as_view()),
-    path("eventviewapi", views.EventViewApi.as_view()),
-    path("eventviewapipersonal", views.EventViewApiPersonal.as_view()),
-    path("eventeditapi", views.EventEditApi),
-    path("usernamelistviewapi", views.UsernameViewApi.as_view()),
-    path("eventdeleteapi", views.EventDeleteApi),
-    path("eventinviteapi", views.EventInviteApi),
-    path("viewsingleevent", views.ViewSingleEvent.as_view()),
-    path("getinvitedusers", views.getInvitedUsers),
-    path("usernameviewapi", views.UsernameViewApi.as_view()),
-    path("profileeditapi", views.ProfileEditApi.as_view()),
-    path("imageview", views.ImageViewApi.as_view()),
-    path("setprofileimage", views.SetProfileImage),
+    # Images
+    path("image", views.ImageViewApi.as_view()),
+    path("image/<int:pk>/", views.ImageViewApi.as_view()),
+    path("profilepicture", views.ProfilePictureView.as_view()),
+    path("profilepicture/<int:pk>/", views.ProfilePictureView.as_view()),
 ]

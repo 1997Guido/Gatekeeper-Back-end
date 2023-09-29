@@ -1,228 +1,298 @@
 import json
 
+from api.functions.AuthCheck import AuthCheck
+from api.functions.QrCodeGenerator import QrCodeGenerator
+from api.functions.QrCodeVerificator import QrCodeVerificator
+from api.models import Event, Image, User
+from api.serializers import (EventSerializer, ImageSerializer,
+                             UserNameSerializer, UserSerializer)
+from django.core.exceptions import ValidationError
 from django.http import HttpResponse, JsonResponse
-from rest_framework import generics, permissions, status, viewsets
+from django.shortcuts import get_object_or_404
+from rest_framework import generics, permissions, status
 from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .functions.AuthCheck import AuthCheck
-from .functions.QrCodeGenerator import QrCodeGenerator
-from .functions.QrCodeVerificator import QrCodeVerificator
-from .models import Event, Image, User
-from .serializers import (EventSerializer, ImageSerializer, UserNameSerializer,
-                          UserSerializer)
 
-# These are views(functions) which are ran when the frontend calls their specified paths(in urls.py)
-# They are called by the frontend using the axios library
-
-
-# This view runs the QrCodeGenerator function and returns the encrypted qr code to the frontend
 def QrCodeGeneratorApi(request):
     return HttpResponse(QrCodeGenerator(request))
 
 
-# This views runs the QrCodeVerificator function and returns the user data to the frontend
 def QrCodeVerificatorApi(request):
     return HttpResponse(QrCodeVerificator(request))
 
 
-# This view runs the AuthCheck function and returns a true if the user is authenticated and a false if the user is not authenticated
-def AuthCheckApi(request):
+def AuthCheckView(request):
     return HttpResponse(AuthCheck(request))
 
 
-# This view is for editing a Event in the database
-# It is called by the frontend when the user edits an event
-# The frontend sends the data to the backend using a POST request
-# The data contains a PK which is the primary key of the event in the database the user wants to edit
-# It checks if the user is the owner of the event
-# If the user is the owner of the event, it saves the changes to the database
-# If the user is not the owner of the event, it returns a message to the frontend
+class IsEventOwner(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        return obj.EventOwner == request.user
 
 
-def EventEditApi(request):
-    data = json.loads(request.body)
-    event = Event.objects.get(pk=data["pk"])
-    serializer = EventSerializer(event, data)
-    if request.user.pk == event.EventOwner.pk:
+class IsUser(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        return obj == request.user
+
+
+class IsImageOwner(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        return obj.Owner == request.user
+
+
+class EventCreateView(generics.CreateAPIView):
+    serializer_class = EventSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.validated_data["EventOwner"] = request.user
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class EventDetailView(generics.RetrieveAPIView):
+    serializer_class = EventSerializer
+
+    def get_object(self):
+        return get_object_or_404(Event, pk=self.kwargs["pk"])
+
+    def get(self, request, *args, **kwargs):
+        event = self.get_object()
+        serializer = self.get_serializer(event)
+        param = self.request.query_params.get("show", None)
+        if param is not None:
+            if param == "guests":
+                return Response(serializer.data["EventInvitedGuests"])
+            else:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.data)
+
+
+class EventListView(generics.ListAPIView):
+    serializer_class = EventSerializer
+
+    def get_queryset(self):
+        queryset = Event.objects.all()
+        param = self.request.query_params.get(
+            "show", "all"
+        )  # Show query param value defaults to "all" if not specified
+
+        if param:
+            match param:
+                case "all":
+                    pass
+                case "invited":
+                    queryset = queryset.filter(
+                        EventInvitedGuests__pk=self.request.user.pk
+                    )
+                case "owned":
+                    queryset = queryset.filter(EventOwner=self.request.user.pk)
+                case _:
+                    raise ValidationError("Invalid 'show' parameter")
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        return queryset
+
+
+class EventDeleteView(generics.DestroyAPIView):
+    serializer_class = EventSerializer
+    permission_classes = [IsEventOwner]
+
+    def get_object(self):
+        obj = Event.objects.get(pk=self.kwargs["pk"])
+        return obj
+
+    def destroy(self, request, *args, **kwargs):
+        event = self.get_object()
+        self.check_object_permissions(request, event)
+        self.perform_destroy(event)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class EventUpdateView(generics.UpdateAPIView):
+    serializer_class = EventSerializer
+    permission_classes = [IsEventOwner]
+
+    def get_object(self):
+        return get_object_or_404(Event, pk=self.kwargs["pk"])
+
+    def update(self, request, *args, **kwargs):
+        event = self.get_object()
+        self.check_object_permissions(request, event)
+
+        serializer = self.get_serializer(event, data=request.data, partial=True)
+
         if serializer.is_valid():
             serializer.save()
-            return HttpResponse("Event edited")
+            return Response(serializer.data, status=status.HTTP_200_OK)
         else:
-            return JsonResponse(serializer.errors)
-    else:
-        return HttpResponse("You are not the owner of this event")
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# This view is for deleting a Event in the database
-# It is called by the frontend when the user deletes an event
-# The frontend sends the data to the backend using a POST request
-def EventDeleteApi(request):
-    data = json.loads(request.body)
-    event = Event.objects.get(pk=data["eventpk"])
-    if request.user.pk == event.EventOwner.pk:
-        event.delete()
-        return HttpResponse("Event deleted")
-    else:
-        return HttpResponse("You are not the owner of this event")
-
-
-# This view handles invites and uninvites to and event in the database
-# It is called by the frontend when the user invites or uninvites a user to an event
-def EventInviteApi(request):
-    data = json.loads(request.body)
-    event = Event.objects.get(pk=data["pk"])
-    if request.user.pk == event.EventOwner.pk:
-        if data["inv"] == "Uninvite":
-            for value in data["invitedUsers"]:
-                user = User.objects.get(username=value["label"])
-                event.EventInvitedGuests.remove(user.pk)
-            return HttpResponse("Users uninvited")
-        if data["inv"] == "Invite":
-            for value in data["invitedUsers"]:
-                user = User.objects.get(username=value["label"])
-                event.EventInvitedGuests.add(user.pk)
-            return HttpResponse("Users invited")
-    else:
-        return HttpResponse("You are not the owner of this event")
-
-
-# This is a class based view that handles Event creation
-# it is a subclass to the APIView class
-# the APIView class is a builtin class from the rest_framework library
-class EventCreationApi(generics.CreateAPIView):
+class EventInviteView(generics.UpdateAPIView):
     serializer_class = EventSerializer
-    serializer_def = EventSerializer
+    permission_classes = [IsEventOwner]
 
-    def perform_create(self, serializer):
-        serializer.save(EventOwner=self.request.user)
+    def get_object(self):
+        return get_object_or_404(Event, pk=self.kwargs["pk"])
+
+    def update(self, request, *args, **kwargs):
+        data = json.loads(request.body)
+        event = self.get_object()
+        self.check_object_permissions(request, event)
+        for value in data["invited"]:
+            user = User.objects.get(username=value["label"])
+            event.EventInvitedGuests.add(user.pk)
+        return HttpResponse("Users invited")
 
 
-# This is a class based view that handles Event viewing
-class EventViewApi(generics.ListAPIView):
+class EventUninviteView(generics.UpdateAPIView):
     serializer_class = EventSerializer
-    serializer_def = EventSerializer
-    queryset = Event.objects.all()
+    permission_classes = [IsEventOwner]
+
+    def get_object(self):
+        return get_object_or_404(Event, pk=self.kwargs["pk"])
+
+    def update(self, request, *args, **kwargs):
+        data = json.loads(request.body)
+        event = self.get_object()
+        self.check_object_permissions(request, event)
+        for value in data["uninvited"]:
+            user = User.objects.get(username=value["label"])
+            event.EventInvitedGuests.remove(user.pk)
+        return HttpResponse("Users uninvited")
 
 
-# This is a class based view that handles Profile viewing
-# If allusers is set to yes, it returns all users in the database
-# If allusers is set to me, it returns the user that is logged in
-# If allusers is set to picture, it returns the profilepicture(pk) of the user that is logged in
 class UserView(generics.ListAPIView):
     serializer_class = UserSerializer
     serializer_def = UserSerializer
 
     def get_queryset(self):
-        if self.request.query_params.get("allusers") == "yes":
-            return User.objects.all()
-        if self.request.query_params.get("allusers") == "me":
-            return User.objects.filter(pk=self.request.user.pk)
-        if self.request.query_params.get("allusers") == "picture":
-            user = User.objects.get(pk=self.request.user.pk)
-            return Image.objects.filter(pk=user.ProfilePicture)
+        param = self.request.query_params.get("show", "all")
+        match param:
+            case "all":
+                queryset = User.objects.all()
+            case "single":
+                pk = self.kwargs.get("pk", None)
+                if pk is not None:
+                    queryset = User.objects.filter(pk=pk)
+            case "me":
+                queryset = User.objects.filter(pk=self.request.user.pk)
+            case _:
+                raise ValidationError("Invalid 'show' parameter")
+        return queryset
 
 
-# This is a class based view that returns all events the logged in user is owner of
-class EventViewApiPersonal(generics.ListAPIView):
-    serializer_class = EventSerializer
-    serializer_def = EventSerializer
-
-    def get_queryset(self):
-        return Event.objects.filter(EventOwner=self.request.user.pk)
-
-
-# this is a class based view that returns the event with the specified pk
-class ViewSingleEvent(generics.ListAPIView):
-    serializer_class = EventSerializer
-    serializer_def = EventSerializer
-
-    def get_queryset(self):
-        event = Event.objects.filter(pk=self.request.query_params.get("pk"))
-        return event
-
-
-# this is a class based view that returns a list of all users invited to the event that is specified by the pk
-def getInvitedUsers(request):
-    data = json.loads(request.body)
-    event = Event.objects.get(pk=data["pk"])
-    return JsonResponse(list(event.EventInvitedGuests.values()), safe=False)
-
-
-#
 class UsernameViewApi(generics.ListAPIView):
     serializer_class = UserNameSerializer
     serializer_def = UserNameSerializer
 
     def get_queryset(self):
-        if self.request.query_params.get("allusers") == "yes":
-            return User.objects.all()
-        if self.request.query_params.get("allusers") == "me":
-            return User.objects.filter(pk=self.request.user.pk)
+        param = self.request.query_params.get("show", "all")
+        match param:
+            case "all":
+                queryset = User.objects.all()
+            case "single":
+                pk = self.kwargs.get("pk", None)
+                if pk is not None:
+                    queryset = User.objects.filter(pk=pk)
+            case "me":
+                queryset = User.objects.filter(pk=self.request.user.pk)
+            case _:
+                raise ValidationError("Invalid 'show' parameter")
+        return queryset
 
 
-class ProfileEditApi(generics.UpdateAPIView):
+class UserUpdateView(generics.UpdateAPIView):
     serializer_class = UserSerializer
     serializer_def = UserSerializer
 
     def get_object(self):
         return User.objects.get(pk=self.request.user.pk)
 
+    def update(self, request, *args, **kwargs):
+        user = self.get_object()
+        serializer = self.get_serializer(user, data=request.data, partial=True)
 
-class ProfileDeleteApi(generics.DestroyAPIView):
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserDeleteView(generics.DestroyAPIView):
     serializer_class = UserSerializer
     serializer_def = UserSerializer
 
     def get_object(self):
         return User.objects.get(pk=self.request.user.pk)
 
+    def destroy(self, request, *args, **kwargs):
+        user = self.get_object()
+        self.perform_destroy(user)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
-def SetProfileImage(request):
-    data = json.loads(request.body)
-    user = User.objects.get(pk=request.user.pk)
-    image = Image.objects.get(pk=data["pictureid"])
-    user.ProfilePicture = image
-    user.save()
-    return HttpResponse("Profile image set")
+
+class ProfilePictureView(APIView):
+    def get(self, request):
+        user = User.objects.get(pk=self.request.user.pk)
+        if user.ProfilePicture is None:
+            return HttpResponse("No profile picture")
+        else:
+            serializer = ImageSerializer(user.ProfilePicture)
+        return JsonResponse(serializer.data)
+
+    def patch(self, request, *args, **kwargs):
+        image_id = self.kwargs.get("pk", None)
+        if image_id is not None:
+            user = User.objects.get(pk=self.request.user.pk)
+            image = Image.objects.get(pk=image_id)
+            user.ProfilePicture = image
+            user.save()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 class ImageViewApi(APIView):
     parser_classes = (MultiPartParser, FormParser)
 
     def get(self, request):
-        if self.request.query_params.get("allmypictures") == "yes":
-            Images = Image.objects.filter(Owner=self.request.user.pk)
-            serializer = ImageSerializer(Images, many=True)
-            return Response(serializer.data)
-        if self.request.query_params.get("allmypictures") == "profilepicture":
-            user = User.objects.get(pk=self.request.user.pk)
-            if user.ProfilePicture == None:
-                return HttpResponse("No profile picture")
-            else:
-                serializer = ImageSerializer(user.ProfilePicture)
-            return JsonResponse(serializer.data)
+        param = self.request.query_params.get("show", "all")
+        match param:
+            case "all":
+                images = Image.objects.all()
+            case "single":
+                pk = self.kwargs.get("pk", None)
+                if pk is not None:
+                    images = Image.objects.filter(pk=pk)
+            case "owned":
+                images = Image.objects.filter(Owner=self.request.user.pk)
+            case _:
+                raise ValidationError("Invalid 'show' parameter")
+        serializer = ImageSerializer(images, many=True)
+        return Response(serializer.data)
 
     def post(self, request):
-        Images_serializer = ImageSerializer(data=request.data)
-        if Images_serializer.is_valid():
-            Images_serializer.save()
-            Images_serializer.save(Owner=self.request.user)
-            user = User.objects.get(pk=self.request.user.pk)
-            user.Images.set = Image.objects.filter(Owner=self.request.user.pk)
-            user.save()
-            return JsonResponse(Images_serializer.data, status=status.HTTP_201_CREATED)
+        serializer = ImageSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            serializer.save(Owner=self.request.user)
+            return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
         else:
-            print("error", Images_serializer.errors)
-            return JsonResponse(
-                Images_serializer.errors, status=status.HTTP_400_BAD_REQUEST
-            )
+            return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request):
-        imagepk = self.request.query_params.get("pk")
-        image = Image.objects.get(pk=imagepk)
+        image_id = self.kwargs.get("pk", None)
+        image = Image.objects.get(pk=image_id)
         if image.Owner.pk == request.user.pk:
             image.delete()
-            return HttpResponse("Image deleted")
+            return Response(status=status.HTTP_204_NO_CONTENT)
         else:
-            return HttpResponse("You are not the owner of this image")
+            return Response(status=status.HTTP_400_BAD_REQUEST)
