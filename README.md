@@ -1,52 +1,28 @@
-# gatekeeper-backend
+# Gatekeeper-Back-end
+Backend van Gatekeeper
 
-The backend for the gatekeeper project
 
-[![Built with Cookiecutter Django](https://img.shields.io/badge/built%20with-Cookiecutter%20Django-ff69b4.svg?logo=cookiecutter)](https://github.com/cookiecutter/cookiecutter-django/)
-[![Black code style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
+Event Planning Webapp.
 
-## Settings
+Welcome to the event planning webapp! This app allows you to easily create and manage event pages, invite guests, and check in attendees using QR code scanning technology.
 
-Moved to [settings](http://cookiecutter-django.readthedocs.io/en/latest/settings.html).
+Getting Started.
 
-## Basic Commands
+To get started with the app, you'll need to sign up for an account. Once you're logged in, you can create an event page, add details about the event, and invite guests. You can also use the QR code scanning feature to check in attendees and keep track of who has arrived.
 
-### Setting Up Your Users
+Features.
 
-- To create a **normal user account**, just go to Sign Up and fill out the form. Once you submit it, you'll see a "Verify Your E-mail Address" page. Go to your console to see a simulated email verification message. Copy the link into your browser. Now the user's email should be verified and ready to go.
+Create and manage event pages
+Invite guests and keep track of RSVPs
+Use QR code scanning to check in attendees
+Customize event pages with all the details your guests need to know
 
-- To create a **superuser account**, use this command:
+Requirements.
 
-      $ python manage.py createsuperuser
+A modern web browser
+An internet connection
+Support
+If you have any questions or issues with the app, please contact us at [insert your contact information].
 
-For convenience, you can keep your normal user logged in on Chrome and your superuser logged in on Firefox (or similar), so that you can see how the site behaves for both kinds of users.
-
-### Type checks
-
-Running type checks with mypy:
-
-    $ mypy gatekeeper
-
-### Test coverage
-
-To run the tests, check your test coverage, and generate an HTML coverage report:
-
-    $ coverage run -m pytest
-    $ coverage html
-    $ open htmlcov/index.html
-
-#### Running tests with pytest
-
-    $ pytest
-
-### Live reloading and Sass CSS compilation
-
-Moved to [Live reloading and SASS compilation](https://cookiecutter-django.readthedocs.io/en/latest/developing-locally.html#sass-compilation-live-reloading).
-
-## Deployment
-
-The following details how to deploy this application.
-
-### Docker
-
-See detailed [cookiecutter-django Docker documentation](http://cookiecutter-django.readthedocs.io/en/latest/deployment-with-docker.html).
+Contribution
+We welcome contributions to this project, if you're interested in helping out, please check out the CONTRIBUTING.md file for more information.
