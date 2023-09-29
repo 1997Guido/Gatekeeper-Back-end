@@ -2,7 +2,6 @@ from uuid import uuid4
 
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.utils.translation import gettext_lazy as _
 
 
 class User(AbstractUser):
@@ -51,7 +50,9 @@ class Event(models.Model):
     EventTimeEnd = models.TimeField(null=False)
     EventLocation = models.CharField(max_length=50, null=False)
     EventDescription = models.CharField(max_length=100, null=False)
-    EventInvitedGuests = models.ManyToManyField(User, related_name="invited_to_events")
+    EventInvitedGuests = models.ManyToManyField(
+        User, related_name="invited_to_events", blank=True, null=True
+    )
     EventIsPrivate = models.BooleanField(default=False)
     EventIsCancelled = models.BooleanField(default=False)
     EventIsFree = models.BooleanField(default=False)

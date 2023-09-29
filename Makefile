@@ -8,9 +8,8 @@ install:
 	pip install -r requirements/local.txt
 
 lint:
-	flake8 gatekeeper
-	isort --check-only --diff gatekeeper
-	djlint ./gatekeeper/templates
+	flake8 gatekeeper_backend
+	isort --check-only --diff gatekeeper_backend
 
 pre-commit:
 	pre-commit run --all-files
@@ -19,9 +18,8 @@ account:
 	DJANGO_SUPERUSER_PASSWORD=admin manage.py createsuperuser --no-input --email admin@example.com --username admin
 
 format:
-	black gatekeeper
-	isort gatekeeper
-	djlint --reformat ./gatekeeper/templates
+	black gatekeeper_backend
+	isort gatekeeper_backend
 
 makemessages:
 	python manage.py makemessages --all
