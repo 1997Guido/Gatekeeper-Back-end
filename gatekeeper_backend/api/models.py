@@ -66,7 +66,7 @@ class Event(models.Model):
 
     @property
     def get_guests(self):
-        return self.EventInvitedGuests.all()
+        return list(self.EventInvitedGuests.all().values())
 
     def __str__(self):
         return self.EventTitle

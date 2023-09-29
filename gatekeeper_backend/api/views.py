@@ -1,8 +1,7 @@
 import json
 
 from api.functions.AuthCheck import AuthCheck
-from api.functions.QrCodeGenerator import QrCodeGenerator
-from api.functions.QrCodeVerificator import QrCodeVerificator
+from api.functions.QrCode import QRCodeHandler
 from api.models import Event, Image, User
 from api.serializers import (EventSerializer, ImageSerializer,
                              UserNameSerializer, UserSerializer)
@@ -15,12 +14,52 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 
-def QrCodeGeneratorApi(request):
-    return HttpResponse(QrCodeGenerator(request))
+class QrCodeApi(APIView):
+    serializer_class = UserSerializer
 
+    def get(self, request):
+        qr_handler = QRCodeHandler(request)
+        try:
+            return HttpResponse(qr_handler.generate())
+        except Exception as e:
+            # Return a meaningful error message while logging the exception for debugging
+            return Response(
+                {"error": "Failed to generate QR code." + e},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
 
-def QrCodeVerificatorApi(request):
-    return HttpResponse(QrCodeVerificator(request))
+    def post(self, request):
+        qr_handler = QRCodeHandler(request)
+        verification_result = qr_handler.verify()
+
+        # If no verification result
+        if not verification_result:
+            return Response(
+                {"error": "QR Code verification failed."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        user, imageurl, invited = verification_result
+
+        # If user is None, it means there was an error in verification
+        if user is None:
+            return Response(
+                {"error": "User not found."},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+        user_serializer = self.serializer_class(user)
+        response_data = {"userdata": user_serializer.data}
+
+        # Add image URL if available
+        if imageurl:
+            response_data["userdata"]["imageurl"] = imageurl
+
+        # Check if the user is invited and return appropriate response
+        if invited:
+            return Response(response_data, status=status.HTTP_202_ACCEPTED)
+        else:
+            return Response(response_data, status=status.HTTP_401_UNAUTHORIZED)
 
 
 def AuthCheckView(request):
