@@ -31,9 +31,7 @@ class Migration(migrations.Migration):
                 ("password", models.CharField(max_length=128, verbose_name="password")),
                 (
                     "last_login",
-                    models.DateTimeField(
-                        blank=True, null=True, verbose_name="last login"
-                    ),
+                    models.DateTimeField(blank=True, null=True, verbose_name="last login"),
                 ),
                 (
                     "is_superuser",
@@ -46,15 +44,11 @@ class Migration(migrations.Migration):
                 (
                     "username",
                     models.CharField(
-                        error_messages={
-                            "unique": "A user with that username already exists."
-                        },
+                        error_messages={"unique": "A user with that username already exists."},
                         help_text="Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.",
                         max_length=150,
                         unique=True,
-                        validators=[
-                            django.contrib.auth.validators.UnicodeUsernameValidator()
-                        ],
+                        validators=[django.contrib.auth.validators.UnicodeUsernameValidator()],
                         verbose_name="username",
                     ),
                 ),
@@ -76,15 +70,11 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "date_joined",
-                    models.DateTimeField(
-                        default=django.utils.timezone.now, verbose_name="date joined"
-                    ),
+                    models.DateTimeField(default=django.utils.timezone.now, verbose_name="date joined"),
                 ),
                 (
                     "name",
-                    models.CharField(
-                        blank=True, max_length=255, verbose_name="Name of User"
-                    ),
+                    models.CharField(blank=True, max_length=255, verbose_name="Name of User"),
                 ),
                 ("first_name", models.CharField(default="John", max_length=30)),
                 ("last_name", models.CharField(default="Doe", max_length=30)),
@@ -163,9 +153,7 @@ class Migration(migrations.Migration):
                 ("EventIsFree", models.BooleanField(default=False)),
                 (
                     "EventPrice",
-                    models.DecimalField(
-                        blank=True, decimal_places=2, default=0, max_digits=5
-                    ),
+                    models.DecimalField(blank=True, decimal_places=2, default=0, max_digits=5),
                 ),
                 ("EventMaxGuests", models.IntegerField(default=50)),
                 ("EventCurrentGuests", models.IntegerField(default=0)),
@@ -183,9 +171,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "EventInvitedGuests",
-                    models.ManyToManyField(
-                        related_name="invited_to_events", to=settings.AUTH_USER_MODEL
-                    ),
+                    models.ManyToManyField(related_name="invited_to_events", to=settings.AUTH_USER_MODEL),
                 ),
                 (
                     "EventOwner",

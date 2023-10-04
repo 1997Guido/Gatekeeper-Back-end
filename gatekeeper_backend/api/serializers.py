@@ -28,6 +28,8 @@ class CustomRegisterSerializer(RegisterSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+    profilepicture_url = serializers.SerializerMethodField()
+
     class Meta:
         model = User
         fields = (
@@ -39,7 +41,14 @@ class UserSerializer(serializers.ModelSerializer):
             "email",
             "username",
             "ProfilePicture",
+            "profilepicture_url",
         )
+
+    def get_profilepicture_url(self, obj):
+        if obj.ProfilePicture:
+            return obj.ProfilePicture.Image.url
+        else:
+            return None
 
 
 class UserNameSerializer(serializers.ModelSerializer):
