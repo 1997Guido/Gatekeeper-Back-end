@@ -5,9 +5,7 @@ from django.db import models
 
 
 class User(AbstractUser):
-    first_name = models.CharField(
-        max_length=30, blank=False, null=False, default="John"
-    )
+    first_name = models.CharField(max_length=30, blank=False, null=False, default="John")
     last_name = models.CharField(max_length=30, blank=False, null=False, default="Doe")
     date_of_birth = models.DateField(null=False, blank=False, default="2000-01-01")
     email = models.EmailField(max_length=254, blank=False, null=False)
@@ -16,9 +14,7 @@ class User(AbstractUser):
         ("Female", "Female"),
         ("Undefined", "Undefined"),
     )
-    gender = models.CharField(
-        max_length=15, choices=GENDER_CHOICES, default=False, null=False
-    )
+    gender = models.CharField(max_length=15, choices=GENDER_CHOICES, default=False, null=False)
     QrUid = models.CharField(max_length=36, null=False, default=uuid4, unique=True)
     ProfilePicture = models.OneToOneField(
         "Image",
@@ -27,6 +23,12 @@ class User(AbstractUser):
         null=True,
         related_name="profile_picture",
     )
+
+    @property
+    def generate_uuid_for_user(self):
+        self.QrUid = uuid4()
+        self.save()
+        return self.QrUid
 
 
 class Event(models.Model):
@@ -50,23 +52,19 @@ class Event(models.Model):
     EventTimeEnd = models.TimeField(null=False)
     EventLocation = models.CharField(max_length=50, null=False)
     EventDescription = models.CharField(max_length=100, null=False)
-    EventInvitedGuests = models.ManyToManyField(
-        User, related_name="invited_to_events", blank=True, null=True
-    )
+    EventInvitedGuests = models.ManyToManyField(User, related_name="invited_to_events", blank=True)
     EventIsPrivate = models.BooleanField(default=False)
     EventIsCancelled = models.BooleanField(default=False)
     EventIsFree = models.BooleanField(default=False)
-    EventPrice = models.DecimalField(
-        max_digits=5, decimal_places=2, default=0, blank=True
-    )
+    EventPrice = models.DecimalField(max_digits=5, decimal_places=2, default=0, blank=True)
     EventMaxGuests = models.IntegerField(null=False, default=50)
     EventCurrentGuests = models.IntegerField(null=False, default=0)
     EventMinimumAge = models.IntegerField(null=False, default=0)
     EventOrganizer = models.CharField(max_length=50)
 
-    @property
-    def get_guests(self):
-        return list(self.EventInvitedGuests.all().values())
+    def is_invited(self, user):
+        # Returns a boolean indicating whether a user is invited to the event
+        return user in self.EventInvitedGuests.all()
 
     def __str__(self):
         return self.EventTitle

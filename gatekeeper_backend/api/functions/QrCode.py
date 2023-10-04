@@ -1,17 +1,10 @@
 import json
 
 import cryptography
+from api.models import Event, User
 from cryptography.fernet import Fernet
 
-from ..models import Event, Image, User
-
-#############################################################################
-#                                                                           #
-#   This file contains the code for generating and verifying the qr codes   #
-#                                                                           #
-#   Created by Mike C. Vermeer                                              #
-#                                                                           #
-#############################################################################
+# This file contains the code for generating and verifying the qr codes
 
 
 class QRCodeHandler:
@@ -33,9 +26,6 @@ class QRCodeHandler:
 
     def generate(self):
         user = User.objects.get(pk=self.request.user.pk)
-        if not user.QrUid:
-            raise ValueError("User does not have a QrUid")
-
         encrypted_qr_uid = self._encrypt(str(user.QrUid).encode("utf-8"))
         return encrypted_qr_uid
 
@@ -45,8 +35,6 @@ class QRCodeHandler:
         event_pk = request_data["event"]
 
         event = Event.objects.get(pk=event_pk)
-        userlist = event.get_guests
-        guestlist = [value["id"] for value in userlist]
 
         try:
             qr_data_decrypted = self._decrypt(qr_data.encode("utf-8")).decode("utf-8")
@@ -56,18 +44,8 @@ class QRCodeHandler:
 
         user = User.objects.get(QrUid=qr_data_decrypted)
 
-        is_guest = user.pk in guestlist
-
-        imageurl = None
-        if user.ProfilePicture_id:
-            try:
-                image = Image.objects.get(pk=user.ProfilePicture_id)
-                imageurl = image.Image.url
-            except Image.DoesNotExist:
-                pass
-
         if qr_data_decrypted == user.QrUid:
-            if is_guest:
-                return (user, imageurl, True)
+            if event.is_invited(user):
+                return (user, True)
             else:
-                return (user, imageurl, False)
+                return (user, False)

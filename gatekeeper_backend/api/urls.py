@@ -22,8 +22,7 @@ urlpatterns = [
     path("userupdate", views.UserUpdateView.as_view()),
     path("userdelete", views.UserDeleteView.as_view()),
     # QR
-    path("qrcodegeneratorapi", views.QrCodeApi.as_view()),
-    path("qrcodeverificatorapi", views.QrCodeApi.as_view()),
+    path("qrcode", views.QrCodeView.as_view()),
     # Images
     path("image", views.ImageViewApi.as_view()),
     path("image/<int:pk>/", views.ImageViewApi.as_view()),

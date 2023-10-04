@@ -3,8 +3,7 @@ import json
 from api.functions.AuthCheck import AuthCheck
 from api.functions.QrCode import QRCodeHandler
 from api.models import Event, Image, User
-from api.serializers import (EventSerializer, ImageSerializer,
-                             UserNameSerializer, UserSerializer)
+from api.serializers import EventSerializer, ImageSerializer, UserNameSerializer, UserSerializer
 from django.core.exceptions import ValidationError
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404
@@ -14,19 +13,12 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 
-class QrCodeApi(APIView):
+class QrCodeView(APIView):
     serializer_class = UserSerializer
 
     def get(self, request):
         qr_handler = QRCodeHandler(request)
-        try:
-            return HttpResponse(qr_handler.generate())
-        except Exception as e:
-            # Return a meaningful error message while logging the exception for debugging
-            return Response(
-                {"error": "Failed to generate QR code." + e},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            )
+        return HttpResponse(qr_handler.generate())
 
     def post(self, request):
         qr_handler = QRCodeHandler(request)
@@ -39,7 +31,7 @@ class QrCodeApi(APIView):
                 status=status.HTTP_404_NOT_FOUND,
             )
 
-        user, imageurl, invited = verification_result
+        user, invited = verification_result
 
         # If user is None, it means there was an error in verification
         if user is None:
@@ -50,10 +42,6 @@ class QrCodeApi(APIView):
 
         user_serializer = self.serializer_class(user)
         response_data = {"userdata": user_serializer.data}
-
-        # Add image URL if available
-        if imageurl:
-            response_data["userdata"]["imageurl"] = imageurl
 
         # Check if the user is invited and return appropriate response
         if invited:
@@ -126,9 +114,7 @@ class EventListView(generics.ListAPIView):
                 case "all":
                     pass
                 case "invited":
-                    queryset = queryset.filter(
-                        EventInvitedGuests__pk=self.request.user.pk
-                    )
+                    queryset = queryset.filter(EventInvitedGuests__pk=self.request.user.pk)
                 case "owned":
                     queryset = queryset.filter(EventOwner=self.request.user.pk)
                 case _:

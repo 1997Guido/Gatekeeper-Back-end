@@ -185,16 +185,12 @@ AUTH_USER_MODEL = "api.User"
 
 REST_USE_JWT = True
 REST_AUTH_TOKEN_MODEL = None
-REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": ("dj_rest_auth.jwt_auth.JWTCookieAuthentication",)
-}
+REST_FRAMEWORK = {"DEFAULT_AUTHENTICATION_CLASSES": ("dj_rest_auth.jwt_auth.JWTCookieAuthentication",)}
 JWT_AUTH_COOKIE = "gatekeeper-auth"
 JWT_AUTH_REFRESH_COOKIE = "gatekeeper-refresh-token"
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 SESSION_COOKIE_AGE = 24 * 3600
-REST_AUTH_REGISTER_SERIALIZERS = {
-    "REGISTER_SERIALIZER": "api.serializers.CustomRegisterSerializer"
-}
+REST_AUTH_REGISTER_SERIALIZERS = {"REGISTER_SERIALIZER": "api.serializers.CustomRegisterSerializer"}
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),

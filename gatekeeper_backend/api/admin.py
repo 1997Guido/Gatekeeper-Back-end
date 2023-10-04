@@ -20,7 +20,7 @@ class CustomUserAdmin(UserAdmin):
                     "date_of_birth",
                     "gender",
                     "QrUid",
-                    "Images",
+                    "ProfilePicture",
                 )
             },
         ),
