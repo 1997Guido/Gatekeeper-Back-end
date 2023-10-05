@@ -18,7 +18,7 @@ urlpatterns = [
     # User
     path("authcheck", views.AuthCheckView),
     path("users", views.UserView.as_view()),
-    path("username", views.UsernameViewApi.as_view()),
+    path("username", views.UsernameView.as_view()),
     path("userupdate", views.UserUpdateView.as_view()),
     path("userdelete", views.UserDeleteView.as_view()),
     # QR

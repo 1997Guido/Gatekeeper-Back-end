@@ -66,6 +66,10 @@ class Event(models.Model):
         # Returns a boolean indicating whether a user is invited to the event
         return user in self.EventInvitedGuests.all()
 
+    @property
+    def guest_names(self):
+        return self.EventInvitedGuests.all().values_list("username", flat=True)
+
     def __str__(self):
         return self.EventTitle
 

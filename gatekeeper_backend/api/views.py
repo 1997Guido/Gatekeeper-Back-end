@@ -3,17 +3,20 @@ import json
 from api.functions.AuthCheck import AuthCheck
 from api.functions.QrCode import QRCodeHandler
 from api.models import Event, Image, User
+from api.permissions import IsEventOwner, IsImageOwner, IsUser
 from api.serializers import EventSerializer, ImageSerializer, UserNameSerializer, UserSerializer
 from django.core.exceptions import ValidationError
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404
-from rest_framework import generics, permissions, status
+from rest_framework import generics, status
 from rest_framework.parsers import FormParser, MultiPartParser
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 
 class QrCodeView(APIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = UserSerializer
 
     def get(self, request):
@@ -54,22 +57,15 @@ def AuthCheckView(request):
     return HttpResponse(AuthCheck(request))
 
 
-class IsEventOwner(permissions.BasePermission):
-    def has_object_permission(self, request, view, obj):
-        return obj.EventOwner == request.user
+class AuthView(APIView):
+    permission_classes = [IsAuthenticated]
 
-
-class IsUser(permissions.BasePermission):
-    def has_object_permission(self, request, view, obj):
-        return obj == request.user
-
-
-class IsImageOwner(permissions.BasePermission):
-    def has_object_permission(self, request, view, obj):
-        return obj.Owner == request.user
+    def get(self, request):
+        return Response(status=status.HTTP_200_OK)
 
 
 class EventCreateView(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = EventSerializer
 
     def create(self, request, *args, **kwargs):
@@ -83,6 +79,7 @@ class EventCreateView(generics.CreateAPIView):
 
 
 class EventDetailView(generics.RetrieveAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = EventSerializer
 
     def get_object(self):
@@ -94,13 +91,14 @@ class EventDetailView(generics.RetrieveAPIView):
         param = self.request.query_params.get("show", None)
         if param is not None:
             if param == "guests":
-                return Response(serializer.data["EventInvitedGuests"])
+                return Response(event.guest_names)
             else:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.data)
 
 
 class EventListView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = EventSerializer
 
     def get_queryset(self):
@@ -112,7 +110,7 @@ class EventListView(generics.ListAPIView):
         if param:
             match param:
                 case "all":
-                    pass
+                    queryset = queryset.filter(EventIsPrivate=False)
                 case "invited":
                     queryset = queryset.filter(EventInvitedGuests__pk=self.request.user.pk)
                 case "owned":
@@ -126,7 +124,7 @@ class EventListView(generics.ListAPIView):
 
 class EventDeleteView(generics.DestroyAPIView):
     serializer_class = EventSerializer
-    permission_classes = [IsEventOwner]
+    permission_classes = [IsEventOwner, IsAuthenticated]
 
     def get_object(self):
         obj = Event.objects.get(pk=self.kwargs["pk"])
@@ -141,7 +139,7 @@ class EventDeleteView(generics.DestroyAPIView):
 
 class EventUpdateView(generics.UpdateAPIView):
     serializer_class = EventSerializer
-    permission_classes = [IsEventOwner]
+    permission_classes = [IsAuthenticated, IsEventOwner]
 
     def get_object(self):
         return get_object_or_404(Event, pk=self.kwargs["pk"])
@@ -161,7 +159,7 @@ class EventUpdateView(generics.UpdateAPIView):
 
 class EventInviteView(generics.UpdateAPIView):
     serializer_class = EventSerializer
-    permission_classes = [IsEventOwner]
+    permission_classes = [IsAuthenticated, IsEventOwner]
 
     def get_object(self):
         return get_object_or_404(Event, pk=self.kwargs["pk"])
@@ -178,7 +176,7 @@ class EventInviteView(generics.UpdateAPIView):
 
 class EventUninviteView(generics.UpdateAPIView):
     serializer_class = EventSerializer
-    permission_classes = [IsEventOwner]
+    permission_classes = [IsAuthenticated, IsEventOwner]
 
     def get_object(self):
         return get_object_or_404(Event, pk=self.kwargs["pk"])
@@ -194,8 +192,8 @@ class EventUninviteView(generics.UpdateAPIView):
 
 
 class UserView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = UserSerializer
-    serializer_def = UserSerializer
 
     def get_queryset(self):
         param = self.request.query_params.get("show", "all")
@@ -213,9 +211,9 @@ class UserView(generics.ListAPIView):
         return queryset
 
 
-class UsernameViewApi(generics.ListAPIView):
+class UsernameView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = UserNameSerializer
-    serializer_def = UserNameSerializer
 
     def get_queryset(self):
         param = self.request.query_params.get("show", "all")
@@ -234,14 +232,15 @@ class UsernameViewApi(generics.ListAPIView):
 
 
 class UserUpdateView(generics.UpdateAPIView):
+    permission_classes = [IsAuthenticated, IsUser]
     serializer_class = UserSerializer
-    serializer_def = UserSerializer
 
     def get_object(self):
         return User.objects.get(pk=self.request.user.pk)
 
     def update(self, request, *args, **kwargs):
         user = self.get_object()
+        self.check_object_permissions(request, user)
         serializer = self.get_serializer(user, data=request.data, partial=True)
 
         if serializer.is_valid():
@@ -253,7 +252,6 @@ class UserUpdateView(generics.UpdateAPIView):
 
 class UserDeleteView(generics.DestroyAPIView):
     serializer_class = UserSerializer
-    serializer_def = UserSerializer
 
     def get_object(self):
         return User.objects.get(pk=self.request.user.pk)
@@ -286,10 +284,11 @@ class ProfilePictureView(APIView):
 
 
 class ImageViewApi(APIView):
+    permission_classes = [IsAuthenticated, IsImageOwner]
     parser_classes = (MultiPartParser, FormParser)
 
     def get(self, request):
-        param = self.request.query_params.get("show", "all")
+        param = self.request.query_params.get("show", "owned")
         match param:
             case "all":
                 images = Image.objects.all()
