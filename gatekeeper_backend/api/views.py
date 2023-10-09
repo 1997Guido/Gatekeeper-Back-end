@@ -1,7 +1,7 @@
 import json
 
 from api.functions.AuthCheck import AuthCheck
-from api.functions.QrCode import QRCodeHandler
+from api.functions.QrCode import ExceptionInvalidToken, ExceptionTokenExpired, QRCodeHandler
 from api.models import Event, Image, User
 from api.permissions import IsEventOwner, IsImageOwner, IsUser
 from api.serializers import EventSerializer, ImageSerializer, UserNameSerializer, UserSerializer
@@ -25,32 +25,28 @@ class QrCodeView(APIView):
 
     def post(self, request):
         qr_handler = QRCodeHandler(request)
-        verification_result = qr_handler.verify()
 
-        # If no verification result
-        if not verification_result:
+        try:
+            user, invited = qr_handler.verify()
+
+            user_serializer = self.serializer_class(user)
+            response_data = {"userdata": user_serializer.data}
+
+            if invited:
+                return Response(response_data, status=status.HTTP_202_ACCEPTED)
+            else:
+                return Response(response_data, status=status.HTTP_401_UNAUTHORIZED)
+
+        except ExceptionTokenExpired:
+            return Response({"error": "QR Code expired."}, status=status.HTTP_406_NOT_ACCEPTABLE)
+        except ExceptionInvalidToken:
+            return Response({"error": "Invalid QR Code."}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            print(str(e))
             return Response(
                 {"error": "QR Code verification failed."},
-                status=status.HTTP_404_NOT_FOUND,
-            )
-
-        user, invited = verification_result
-
-        # If user is None, it means there was an error in verification
-        if user is None:
-            return Response(
-                {"error": "User not found."},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
-
-        user_serializer = self.serializer_class(user)
-        response_data = {"userdata": user_serializer.data}
-
-        # Check if the user is invited and return appropriate response
-        if invited:
-            return Response(response_data, status=status.HTTP_202_ACCEPTED)
-        else:
-            return Response(response_data, status=status.HTTP_401_UNAUTHORIZED)
 
 
 def AuthCheckView(request):
