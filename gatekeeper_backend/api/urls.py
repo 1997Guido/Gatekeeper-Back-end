@@ -16,7 +16,7 @@ urlpatterns = [
     path("eventupdate/<int:pk>/", views.EventUpdateView.as_view()),
     path("eventdelete/<int:pk>/", views.EventDeleteView.as_view()),
     # User
-    path("authcheck", views.AuthCheckView),
+    path("authcheck", views.AuthView.as_view()),
     path("users", views.UserView.as_view()),
     path("username", views.UsernameView.as_view()),
     path("userupdate", views.UserUpdateView.as_view()),
