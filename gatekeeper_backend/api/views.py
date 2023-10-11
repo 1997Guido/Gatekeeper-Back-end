@@ -1,6 +1,5 @@
 import json
 
-from api.functions.AuthCheck import AuthCheck
 from api.functions.QrCode import QRCodeHandler
 from api.models import Event, Image, User
 from api.permissions import IsEventOwner, IsImageOwner, IsUser
@@ -51,10 +50,6 @@ class QrCodeView(APIView):
             return Response(response_data, status=status.HTTP_202_ACCEPTED)
         else:
             return Response(response_data, status=status.HTTP_401_UNAUTHORIZED)
-
-
-def AuthCheckView(request):
-    return HttpResponse(AuthCheck(request))
 
 
 class AuthView(APIView):
