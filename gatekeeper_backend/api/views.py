@@ -74,7 +74,6 @@ class EventCreateView(generics.CreateAPIView):
 
 
 class EventDetailView(generics.RetrieveAPIView):
-    permission_classes = [IsAuthenticated]
     serializer_class = EventSerializer
 
     def get_object(self):
@@ -177,13 +176,13 @@ class EventUninviteView(generics.UpdateAPIView):
         return get_object_or_404(Event, pk=self.kwargs["pk"])
 
     def update(self, request, *args, **kwargs):
-        data = json.loads(request.body)
         event = self.get_object()
         self.check_object_permissions(request, event)
-        for value in data["uninvited"]:
-            user = User.objects.get(username=value["label"])
-            event.EventInvitedGuests.remove(user.pk)
-        return HttpResponse("Users uninvited")
+        username = request.data["username"]
+        user = User.objects.get(username=username)
+        event.EventInvitedGuests.remove(user)
+        event.save()
+        return Response({"message": f"uninvited {username}"}, status=status.HTTP_200_OK)
 
 
 class UserView(generics.ListAPIView):
@@ -246,6 +245,7 @@ class UserUpdateView(generics.UpdateAPIView):
 
 
 class UserDeleteView(generics.DestroyAPIView):
+    permission_classes = [IsAuthenticated, IsUser]
     serializer_class = UserSerializer
 
     def get_object(self):
@@ -253,7 +253,8 @@ class UserDeleteView(generics.DestroyAPIView):
 
     def destroy(self, request, *args, **kwargs):
         user = self.get_object()
-        self.perform_destroy(user)
+        self.check_object_permissions(request, user)
+        user.delete(user)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
@@ -278,7 +279,7 @@ class ProfilePictureView(APIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
-class ImageViewApi(APIView):
+class ImageView(APIView):
     permission_classes = [IsAuthenticated, IsImageOwner]
     parser_classes = (MultiPartParser, FormParser)
 
