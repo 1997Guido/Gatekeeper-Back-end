@@ -1,7 +1,7 @@
+from allauth.account.adapter import DefaultAccountAdapter
+from api.models import Event, Image, User
 from dj_rest_auth.registration.serializers import RegisterSerializer
 from rest_framework import serializers
-
-from .models import Event, Image, User
 
 # this code serializes our model so it can be show in a readable format. you can configure which fields to serialize
 # and how they are serialized
@@ -25,6 +25,20 @@ class CustomRegisterSerializer(RegisterSerializer):
             "date_of_birth": self.validated_data.get("date_of_birth", ""),
             "gender": self.validated_data.get("gender", ""),
         }
+
+
+class CustomAccountAdapter(DefaultAccountAdapter):
+    def save_user(self, request, user, form, commit=True):
+        user = super().save_user(request, user, form, commit=False)
+
+        user.first_name = form.cleaned_data.get("first_name")
+        user.last_name = form.cleaned_data.get("last_name")
+        user.date_of_birth = form.cleaned_data.get("date_of_birth")
+        user.gender = form.cleaned_data.get("gender")
+
+        if commit:
+            user.save()
+        return user
 
 
 class UserSerializer(serializers.ModelSerializer):

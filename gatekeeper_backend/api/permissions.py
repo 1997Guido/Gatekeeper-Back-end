@@ -13,7 +13,7 @@ class IsEventOwner(permissions.BasePermission):
 
 class IsUser(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
-        return bool(obj.user == request.user)
+        return bool(obj == request.user)
 
 
 class IsImageOwner(permissions.BasePermission):
