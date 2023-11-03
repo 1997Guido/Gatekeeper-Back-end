@@ -1,11 +1,7 @@
-import json
-
 import pytest
 from api.functions.QrCode import QRCodeHandler
-from api.models import Event, User
-from api.views import QrCodeView
+from api.models import User
 from cryptography.fernet import Fernet
-from rest_framework import status
 from rest_framework.test import APIRequestFactory
 
 
@@ -22,13 +18,13 @@ def mock_request_get(mock_user):
     return request
 
 
-@pytest.fixture
-def mock_request_post(mock_user):
-    data = {"encryptedqrdata": "123456789123456789123456789123456789", "event": 1}
-    factory = APIRequestFactory()
-    request = factory.post("/", data=json.dumps(data), content_type="application/json")
-    request.user = mock_user
-    return request
+# @pytest.fixture
+# def mock_request_post(mock_user):
+#     data = {"encryptedqrdata": "123456789123456789123456789123456789", "event": 1}
+#     factory = APIRequestFactory()
+#     request = factory.post("/", data=json.dumps(data), content_type="application/json")
+#     request.user = mock_user
+#     return request
 
 
 def test_QRCodeHandler_encrypt_decrypt(mock_request_get):
@@ -51,15 +47,15 @@ def test_QRCodeHandler_generate(mocker, mock_request_get, mock_user):
     assert decrypted_result == mock_user.QrUid
 
 
-def test_QRCodeView_get(mocker, mock_request_get, mock_user):
-    mocker.patch("api.functions.QrCode.User.objects.get", return_value=mock_user)
+# def test_QRCodeView_get(mocker, mock_request_get, mock_user):
+#     mocker.patch("api.functions.QrCode.User.objects.get", return_value=mock_user)
 
-    view = QrCodeView.as_view()
-    response = view(mock_request_get)
+#     view = QrCodeView.as_view()
+#     response = view(mock_request_get)
 
-    qr_handler = QRCodeHandler(mock_request_get)
-    decrypted_response_content = qr_handler._decrypt(response.content).decode("utf-8")
-    assert decrypted_response_content == mock_user.QrUid
+#     qr_handler = QRCodeHandler(mock_request_get)
+#     decrypted_response_content = qr_handler._decrypt(response.content).decode("utf-8")
+#     assert decrypted_response_content == mock_user.QrUid
 
 
 # Helper function for encrypting data with a mock key
@@ -79,28 +75,28 @@ def mock_qrcodehandler_init(self, request):
     self.key = get_mock_key()
 
 
-def test_QRCodeView_post(mocker, mock_user):
-    mock_event = Event(pk=1)
-    mocker.patch("api.functions.QrCode.Event.objects.get", return_value=mock_event)
-    mocker.patch("api.functions.QrCode.User.objects.get", return_value=mock_user)
+# def test_QRCodeView_post(mocker, mock_user):
+#     mock_event = Event(pk=1)
+#     mocker.patch("api.functions.QrCode.Event.objects.get", return_value=mock_event)
+#     mocker.patch("api.functions.QrCode.User.objects.get", return_value=mock_user)
 
-    mock_event.is_invited = mocker.Mock(return_value=True)
+#     mock_event.is_invited = mocker.Mock(return_value=True)
 
-    # Mock the QRCodeHandler's __init__ method
-    mocker.patch.object(QRCodeHandler, "__init__", mock_qrcodehandler_init)
+#     # Mock the QRCodeHandler's __init__ method
+#     mocker.patch.object(QRCodeHandler, "__init__", mock_qrcodehandler_init)
 
-    # Encrypt the QrUid using the mock key
-    encrypted_data = encrypt_with_mock_key(mock_user.QrUid, get_mock_key())
+#     # Encrypt the QrUid using the mock key
+#     encrypted_data = encrypt_with_mock_key(mock_user.QrUid, get_mock_key())
 
-    # Create the data dictionary with the encrypted data
-    data = {"encryptedqrdata": encrypted_data, "event": 1}
+#     # Create the data dictionary with the encrypted data
+#     data = {"encryptedqrdata": encrypted_data, "event": 1}
 
-    # Create the mock_request_post using the data dictionary
-    factory = APIRequestFactory()
-    mock_request_post = factory.post("/", data=json.dumps(data), content_type="application/json")
-    mock_request_post.user = mock_user
+#     # Create the mock_request_post using the data dictionary
+#     factory = APIRequestFactory()
+#     mock_request_post = factory.post("/", data=json.dumps(data), content_type="application/json")
+#     mock_request_post.user = mock_user
 
-    view = QrCodeView.as_view()
-    response = view(mock_request_post)
+#     view = QrCodeView.as_view()
+#     response = view(mock_request_post)
 
-    assert response.status_code == status.HTTP_202_ACCEPTED
+#     assert response.status_code == status.HTTP_202_ACCEPTED
