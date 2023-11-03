@@ -24,8 +24,8 @@ urlpatterns = [
     # QR
     path("qrcode", views.QrCodeView.as_view()),
     # Images
-    path("image", views.ImageViewApi.as_view()),
-    path("image/<int:pk>/", views.ImageViewApi.as_view()),
+    path("image", views.ImageView.as_view()),
+    path("image/<int:pk>/", views.ImageView.as_view()),
     path("profilepicture", views.ProfilePictureView.as_view()),
     path("profilepicture/<int:pk>/", views.ProfilePictureView.as_view()),
 ]
