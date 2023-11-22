@@ -191,6 +191,7 @@ JWT_AUTH_REFRESH_COOKIE = "gatekeeper-refresh-token"
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 SESSION_COOKIE_AGE = 24 * 3600
 REST_AUTH_REGISTER_SERIALIZERS = {"REGISTER_SERIALIZER": "api.serializers.CustomRegisterSerializer"}
+ACCOUNT_ADAPTER = "api.serializers.CustomAccountAdapter"
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
