@@ -67,7 +67,7 @@ http:
       tls:
         certResolver: letsencrypt
 
-    
+
 
   middlewares:
     csrf:
