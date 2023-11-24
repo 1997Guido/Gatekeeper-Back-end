@@ -1,6 +1,5 @@
 import json
 
-from api.functions.AuthCheck import AuthCheck
 from api.functions.QrCode import ExceptionInvalidToken, ExceptionTokenExpired, QRCodeHandler
 from api.models import Event, Image, User
 from api.permissions import IsEventOwner, IsImageOwner, IsUser
