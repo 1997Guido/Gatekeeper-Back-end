@@ -1,10 +1,12 @@
 version: '3'
 
 volumes:
-  production_postgres_data: {}
-  production_postgres_data_backups: {}
-  production_traefik: {}
-  production_django_media: {}
+  production_postgres_data_gatekeeper: {}
+  production_postgres_data_backups_gatekeeper: {}
+  production_traefik_gatekeeper: {}
+  production_django_media_gatekeeper: {}
+  production_react_app_gatekeeper: {}
+  production_django_static_files_gatekeeper: {}
 
 services:
   django:
@@ -14,14 +16,20 @@ services:
 
     image: gatekeeper_production_django
     volumes:
-      - production_django_media:/app/gatekeeper/media
+      - production_django_media_gatekeeper:/app/media
+      - production_django_static_files_gatekeeper:/app/gatekeeper_backend/staticfiles
     depends_on:
       - postgres
       - redis
     env_file:
       - ./.envs/.production/.django
       - ./.envs/.production/.postgres
-    command: /start
+    command: >
+      bash -c "
+        cd gatekeeper_backend &&
+        python manage.py migrate &&
+        python manage.py create_superuser &&
+        /start"
 
   postgres:
     build:
@@ -29,8 +37,8 @@ services:
       dockerfile: ./compose/production/postgres/Dockerfile
     image: gatekeeper_production_postgres
     volumes:
-      - production_postgres_data:/var/lib/postgresql/data
-      - production_postgres_data_backups:/backups
+      - production_postgres_data_gatekeeper:/var/lib/postgresql/data
+      - production_postgres_data_backups_gatekeeper:/backups
     env_file:
       - ./.envs/.production/.postgres
 
@@ -42,7 +50,7 @@ services:
     depends_on:
       - django
     volumes:
-      - production_traefik:/etc/traefik/acme
+      - production_traefik_gatekeeper:/etc/traefik/acme
     ports:
       - '0.0.0.0:80:80'
       - '0.0.0.0:443:443'
@@ -58,4 +66,6 @@ services:
     depends_on:
       - django
     volumes:
-      - production_django_media:/usr/share/nginx/media:ro
+      - production_django_media_gatekeeper:/usr/share/nginx/media:ro
+      - production_react_app_gatekeeper:/usr/share/nginx/html:ro
+      - production_django_static_files_gatekeeper:/usr/share/nginx/static:ro

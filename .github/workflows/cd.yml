@@ -1,0 +1,16 @@
+name: Deploy to Staging
+
+on:
+  workflow_dispatch:  # Allows you to manually trigger the workflow
+
+jobs:
+  deploy:
+    runs-on: self-hosted  # Make sure this matches the label of your self-hosted runner
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build and Deploy
+        run: |
+          docker-compose -f docker-compose.yml build
+          docker-compose -f docker-compose.yml up -d

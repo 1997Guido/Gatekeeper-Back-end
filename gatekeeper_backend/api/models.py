@@ -7,7 +7,7 @@ from django.db import models
 class User(AbstractUser):
     first_name = models.CharField(max_length=30, blank=False, null=False, default="John")
     last_name = models.CharField(max_length=30, blank=False, null=False, default="Doe")
-    date_of_birth = models.DateField()
+    date_of_birth = models.DateField(null=False, blank=False, default="1970-01-01")
     email = models.EmailField(max_length=254, blank=False, null=False)
     GENDER_CHOICES = (
         ("Male", "Male"),

@@ -75,7 +75,8 @@ RUN chown django:django ${APP_HOME}
 
 USER django
 
-RUN DATABASE_URL="" \
+RUN cd gatekeeper_backend \ 
+  DATABASE_URL="" \
   DJANGO_SETTINGS_MODULE="gatekeeper_backend.settings" \
   python manage.py compilemessages
 
