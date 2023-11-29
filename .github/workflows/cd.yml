@@ -12,5 +12,5 @@ jobs:
 
       - name: Build and Deploy
         run: |
-          docker-compose -f production.yml build
+          docker-compose -f production.yml build --no-cache
           docker-compose -f production.yml up -d
