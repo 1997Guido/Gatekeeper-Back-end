@@ -40,7 +40,7 @@ SECRET_KEY = "django-insecure-8x-6xtjr0fi5=-amw61(dsxwfsfs@r7l1ei(ws)!@9m3v46a#f
 DEBUG = env.bool("DJANGO_DEBUG", True)
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-ALLOWED_HOSTS = ["127.0.0.1", "localhost", "127.0.0.1:3000", "localhost:3000"]
+ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["127.0.0.1", "localhost", "127.0.0.1:3000", "localhost:3000"])
 CORS_ALLOW_METHODS = [
     "GET",
     "POST",
