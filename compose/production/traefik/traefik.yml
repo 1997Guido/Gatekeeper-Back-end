@@ -28,7 +28,7 @@ certificatesResolvers:
 http:
   routers:
     web-secure-router:
-      rule: 'Host(`www.guidoerdtsieck.nl`) && PathPrefix(`/django/`)'
+      rule: 'Host(`guidoerdtsieck.nl`) && PathPrefix(`/django/`)'
       entryPoints:
         - web-secure
       middlewares:
@@ -39,7 +39,7 @@ http:
         certResolver: letsencrypt
 
     web-media-router:
-      rule: 'Host(`www.guidoerdtsieck.nl`) && PathPrefix(`/media/`) || PathPrefix(`/staticfiles/`)'
+      rule: 'Host(`guidoerdtsieck.nl`) && PathPrefix(`/media/`) || PathPrefix(`/staticfiles/`)'
       entryPoints:
         - web-secure
       middlewares:
@@ -49,7 +49,7 @@ http:
         certResolver: letsencrypt
 
     react-app-router:
-      rule: 'Host(`guidoerdtsieck.nl`) || Host(`www.guidoerdtsieck.nl`)'
+      rule: 'Host(`guidoerdtsieck.nl`)'
       entryPoints:
         - web-secure
       middlewares:
