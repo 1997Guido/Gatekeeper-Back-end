@@ -1,10 +1,12 @@
 # General
 # ------------------------------------------------------------------------------
 DJANGO_READ_DOT_ENV_FILE=True
+DJANGO_DEBUG=False
 DJANGO_SETTINGS_MODULE=gatekeeper_backend.settings
 DJANGO_SECRET_KEY=J5EV5oR9ZhNMDde1X3c5WvLZX3z7o0Vmx7GJzCix3P5lYnW0dUJxm4SPYoDwgdEx
 DJANGO_ADMIN_URL=gFVPo6rcJYC7KgFjwQj21aD0bwXD14a8/
-DJANGO_ALLOWED_HOSTS=guidoerdtsieck.nl
+DJANGO_ALLOWED_HOSTS=guidoerdtsieck.nl,www.guidoerdtsieck.nl,localhost
+DJANGO_ALLOWED_HOSTS_CORS=guidoerdtsieck.nl,www.guidoerdtsieck.nl,localhost
 DJANGO_SUPERUSER_USERNAME=admin
 DJANGO_SUPERUSER_PASSWORD=admin
 DJANGO_SUPERUSER_EMAIL=developer@guidoerdtsieck.nl
