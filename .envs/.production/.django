@@ -1,0 +1,41 @@
+# General
+# ------------------------------------------------------------------------------
+DJANGO_READ_DOT_ENV_FILE=True
+DJANGO_DEBUG=False
+DJANGO_SETTINGS_MODULE=gatekeeper_backend.settings
+DJANGO_SECRET_KEY=J5EV5oR9ZhNMDde1X3c5WvLZX3z7o0Vmx7GJzCix3P5lYnW0dUJxm4SPYoDwgdEx
+DJANGO_ADMIN_URL=gFVPo6rcJYC7KgFjwQj21aD0bwXD14a8/
+DJANGO_ALLOWED_HOSTS=guidoerdtsieck.nl,www.guidoerdtsieck.nl,localhost
+DJANGO_ALLOWED_HOSTS_CORS=guidoerdtsieck.nl,www.guidoerdtsieck.nl,localhost
+DJANGO_CORS_ORIGIN_WHITELIST=http://guidoerdtsieck.nl,https://.guidoerdtsieck.nl,http://www.guidoerdtsieck.nl,https://.www.guidoerdtsieck.nl
+DJANGO_CSRF_TRUSTED_ORIGINS=http://guidoerdtsieck.nl,https://.guidoerdtsieck.nl,http://www.guidoerdtsieck.nl,https://.www.guidoerdtsieck.nl
+DJANGO_SUPERUSER_USERNAME=admin
+DJANGO_SUPERUSER_PASSWORD=admin
+DJANGO_SUPERUSER_EMAIL=developer@guidoerdtsieck.nl
+
+# Security
+# ------------------------------------------------------------------------------
+# TIP: better off using DNS, however, redirect is OK too
+DJANGO_SECURE_SSL_REDIRECT=False
+
+# Email
+# ------------------------------------------------------------------------------
+DJANGO_SERVER_EMAIL=
+
+MAILGUN_API_KEY=
+MAILGUN_DOMAIN=
+
+
+# django-allauth
+# ------------------------------------------------------------------------------
+DJANGO_ACCOUNT_ALLOW_REGISTRATION=True
+
+# Gunicorn
+# ------------------------------------------------------------------------------
+WEB_CONCURRENCY=4
+
+
+# Redis
+# ------------------------------------------------------------------------------
+REDIS_URL=redis://redis:6379/0
+

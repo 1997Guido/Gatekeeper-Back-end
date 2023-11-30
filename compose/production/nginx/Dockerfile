@@ -5,7 +5,7 @@ COPY ./compose/production/nginx/default.conf /etc/nginx/conf.d/default.conf
 
 # Copy the React app's build directory to the container
 # Adjust the source path according to your project structure
-COPY ./compose/production/nginx/react/build /usr/share/nginx/html
+COPY ./compose/production/nginx/react /usr/share/nginx/html
 
 # Create directories for Django's static and media files
 # and set appropriate permissions
