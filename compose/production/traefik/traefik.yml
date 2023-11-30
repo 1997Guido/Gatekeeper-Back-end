@@ -33,6 +33,7 @@ http:
         - web-secure
       middlewares:
         - csrf
+        - strip-prefix
       service: django
       tls:
         # https://docs.traefik.io/master/routing/routers/#certresolver
@@ -66,6 +67,12 @@ http:
       # https://docs.djangoproject.com/en/dev/ref/csrf/#ajax
       headers:
         hostsProxyHeaders: ['X-CSRFToken']
+
+    strip-prefix:
+      # https://docs.traefik.io/master/middlewares/stripprefix/
+      stripPrefix:
+        prefixes:
+          - /django
 
   services:
     django:
