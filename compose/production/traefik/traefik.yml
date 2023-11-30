@@ -76,7 +76,7 @@ http:
     nginx:
       loadBalancer:
         servers:
-          - url: http://nginx:80
+          - url: http://nginx:8080
 
 providers:
   # https://docs.traefik.io/master/providers/file/
