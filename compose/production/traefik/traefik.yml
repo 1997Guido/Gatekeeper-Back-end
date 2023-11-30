@@ -50,7 +50,7 @@ http:
         certResolver: letsencrypt
 
     web-media-router:
-      rule: 'Host(`www.guidoerdtsieck.nl`)) && PathPrefix(`/media/`) || PathPrefix(`/static/`)'
+      rule: 'Host(`www.guidoerdtsieck.nl`)) && PathPrefix(`/media/`) || PathPrefix(`/staticfiles/`)'
       entryPoints:
         - web-secure
       middlewares:
