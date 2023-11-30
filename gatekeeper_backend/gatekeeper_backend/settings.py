@@ -60,19 +60,19 @@ CORS_ALLOW_HEADERS = [
     "x-requested-with",
     "access-control-allow-origin",
 ]
-CORS_ORIGIN_WHITELIST = [
+CORS_ORIGIN_WHITELIST = env.list("DJANGO_ALLOWED_HOSTS_CORS", default=[
     "http://*.localhost:3000",
     "http://*.127.0.0.1",
     "http://127.0.0.1:3000",
     "http://localhost:3000",
-]
+])
 CORS_ALLOW_CREDENTIALS = True
-CSRF_TRUSTED_ORIGINS = [
+CSRF_TRUSTED_ORIGINS = env.list("DJANGO_ALLOWED_HOSTS_CORS",[
     "http://*.localhost:3000",
     "http://*.127.0.0.1",
     "http://127.0.0.1:3000",
     "http://localhost:3000",
-]
+])
 # Application definition
 ACCOUNT_LOGOUT_ON_GET = True
 
