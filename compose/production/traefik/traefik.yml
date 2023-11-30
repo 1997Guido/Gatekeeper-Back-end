@@ -39,7 +39,7 @@ http:
         certResolver: letsencrypt
 
     web-secure-router:
-      rule: 'Host(`guidoerdtsieck.nl`) || Host(`www.guidoerdtsieck.nl`) && PathPrefix(`/django/`)'
+      rule: 'Host(`www.guidoerdtsieck.nl`) && PathPrefix(`/django/`)'
       entryPoints:
         - web-secure
       middlewares:
@@ -50,7 +50,7 @@ http:
         certResolver: letsencrypt
 
     web-media-router:
-      rule: '(Host(`guidoerdtsieck.nl`) || Host(`www.guidoerdtsieck.nl`)) && PathPrefix(`/media/`) || PathPrefix(`/static/`)'
+      rule: 'Host(`www.guidoerdtsieck.nl`)) && PathPrefix(`/media/`) || PathPrefix(`/static/`)'
       entryPoints:
         - web-secure
       middlewares:
@@ -76,7 +76,7 @@ http:
     nginx:
       loadBalancer:
         servers:
-          - url: http://nginx:8080
+          - url: http://nginx:80
 
 providers:
   # https://docs.traefik.io/master/providers/file/
