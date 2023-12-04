@@ -5,7 +5,6 @@ volumes:
   production_postgres_data_backups_gatekeeper: {}
   production_traefik_gatekeeper: {}
   production_django_media_gatekeeper: {}
-  production_react_app_gatekeeper: {}
   production_django_static_files_gatekeeper: {}
 
 services:
@@ -67,5 +66,4 @@ services:
       - django
     volumes:
       - production_django_media_gatekeeper:/usr/share/nginx/media:ro
-      - production_react_app_gatekeeper:/usr/share/nginx/html:ro
       - production_django_static_files_gatekeeper:/usr/share/nginx/static:ro

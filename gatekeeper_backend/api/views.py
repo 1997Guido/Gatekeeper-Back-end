@@ -279,7 +279,7 @@ class ImageView(APIView):
     permission_classes = [IsAuthenticated, IsImageOwner]
     parser_classes = (MultiPartParser, FormParser)
 
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
         param = self.request.query_params.get("show", "owned")
         match param:
             case "all":
@@ -304,11 +304,8 @@ class ImageView(APIView):
         else:
             return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request):
+    def delete(self, request, *args, **kwargs):
         image_id = self.kwargs.get("pk", None)
         image = Image.objects.get(pk=image_id)
-        if image.Owner.pk == request.user.pk:
-            image.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+        image.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
