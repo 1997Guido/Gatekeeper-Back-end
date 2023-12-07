@@ -78,6 +78,8 @@ class ImageSerializer(serializers.ModelSerializer):
 
 
 class EventSerializer(serializers.ModelSerializer):
+    EventBannerURL = serializers.SerializerMethodField()
+
     class Meta:
         model = Event
         fields = (
@@ -99,4 +101,11 @@ class EventSerializer(serializers.ModelSerializer):
             "EventPrice",
             "EventIsFree",
             "EventBanner",
+            "EventBannerURL",
         )
+
+    def get_EventBannerURL(self, obj):
+        if obj.EventBanner:
+            return obj.EventBanner.url
+        else:
+            return None
