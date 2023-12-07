@@ -98,4 +98,5 @@ class EventSerializer(serializers.ModelSerializer):
             "EventCurrentGuests",
             "EventPrice",
             "EventIsFree",
+            "EventBanner",
         )

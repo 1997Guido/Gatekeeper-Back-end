@@ -43,7 +43,7 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 ALLOWED_HOSTS = env.list(
     "DJANGO_ALLOWED_HOSTS", default=["127.0.0.1", "localhost", "127.0.0.1:3000", "localhost:3000"]
 )
-DJANGO_SECURE_SSL_REDIRECT=env.bool("DJANGO_SECURE_SSL_REDIRECT", False)
+DJANGO_SECURE_SSL_REDIRECT = env.bool("DJANGO_SECURE_SSL_REDIRECT", False)
 CORS_ALLOW_METHODS = [
     "GET",
     "POST",

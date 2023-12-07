@@ -40,13 +40,7 @@ class Event(models.Model):
         related_name="owned_events",
     )
     EventTitle = models.CharField(max_length=12, null=False)
-    EventBanner = models.ForeignKey(
-        "Image",
-        on_delete=models.SET_NULL,
-        blank=True,
-        null=True,
-        related_name="event_banners",
-    )
+    EventBanner = models.ImageField(upload_to="images", null=True, blank=True)
     EventDate = models.DateField(null=False)
     EventTimeStart = models.TimeField(null=False)
     EventTimeEnd = models.TimeField(null=False)
@@ -85,6 +79,10 @@ class Image(models.Model):
         null=True,
         related_name="owned_images",
     )
+
+    def set_owner(self, user):
+        self.Owner = user
+        self.save()
 
     def __str__(self):
         return self.Title

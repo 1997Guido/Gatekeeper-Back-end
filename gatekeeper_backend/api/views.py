@@ -58,6 +58,7 @@ class AuthView(APIView):
 class EventCreateView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = EventSerializer
+    parser_classes = (MultiPartParser, FormParser)
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -282,12 +283,13 @@ class ImageView(APIView):
     def get(self, request, *args, **kwargs):
         param = self.request.query_params.get("show", "owned")
         match param:
-            case "all":
-                images = Image.objects.all()
             case "single":
                 pk = self.kwargs.get("pk", None)
                 if pk is not None:
                     images = Image.objects.filter(pk=pk)
+                    self.check_object_permissions(request, images[0])
+                else:
+                    return Response(status=status.HTTP_400_BAD_REQUEST)
             case "owned":
                 images = Image.objects.filter(Owner=self.request.user.pk)
             case _:
