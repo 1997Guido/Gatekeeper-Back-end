@@ -25,7 +25,7 @@ urlpatterns = [
     path("api/", include("api.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-if settings.DEBUG == False:
+if settings.DEBUG is False:
     urlpatterns = [
         path("django/auth/", include("dj_rest_auth.urls")),
         path("django/auth/registration/", include("dj_rest_auth.registration.urls")),
