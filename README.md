@@ -1,5 +1,8 @@
+*** SCHOOL PROJECT ***
+
+
 # Gatekeeper-Back-end
-Backend van Gatekeeper
+Backend for the Gatekeeper app
 
 
 Event Planning Webapp.
