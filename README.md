@@ -29,3 +29,31 @@ If you have any questions or issues with the app, please contact us at [insert y
 
 Contribution
 We welcome contributions to this project, if you're interested in helping out, please check out the CONTRIBUTING.md file for more information.
+
+
+## Local Setup Guide
+
+### Prerequisites
+- Python (3.11 or suitable version)
+- PostgreSQL
+- PostGIS
+- GDAL
+
+### Installation Instructions
+
+#### Install PostgreSQL and PostGIS
+On Debian-based systems:
+sudo apt-get update
+sudo apt-get install postgresql postgresql-contrib
+sudo apt-get install postgis postgresql-12-postgis-3
+
+
+#### Install GDAL
+For Debian-based systems:
+sudo apt-get install libgdal-dev
+
+
+#### Install project
+pip install -r requirements/local.txt
+Create a .env file in the root directory of the project and add the following variables:
+DATABASE_URL=postgis://username:password@localhost:5432/databasename

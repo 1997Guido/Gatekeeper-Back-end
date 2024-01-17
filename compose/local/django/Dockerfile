@@ -8,16 +8,19 @@ ARG BUILD_ENVIRONMENT=local
 
 # Install apt packages
 RUN apt-get update && apt-get install --no-install-recommends -y \
-  # dependencies for building Python packages
   build-essential \
-  # psycopg2 dependencies
-  libpq-dev
+  libpq-dev \
+  libgdal-dev \
+  gdal-bin \
+  # PostGIS installation
+  postgresql-client \
+  postgis
 
 # Requirements are installed here to ensure they will be cached.
 COPY ./requirements .
 
 # Create Python Dependency and Sub-Dependency Wheels.
-RUN pip wheel --wheel-dir /usr/src/app/wheels  \
+RUN pip wheel --wheel-dir /usr/src/app/wheels \
   -r ${BUILD_ENVIRONMENT}.txt
 
 
@@ -33,10 +36,14 @@ ENV BUILD_ENV ${BUILD_ENVIRONMENT}
 
 WORKDIR ${APP_HOME}
 
-
 # devcontainer dependencies and utils
 RUN apt-get update && apt-get install --no-install-recommends -y \
-  sudo git bash-completion nano ssh
+  sudo git bash-completion nano ssh \
+  libgdal-dev \
+  gdal-bin \
+  # PostGIS runtime dependencies
+  postgresql-client \
+  postgis
 
 # Create devcontainer user and add it to sudoers
 RUN groupadd --gid 1000 dev-user \
@@ -70,8 +77,6 @@ RUN chmod +x /entrypoint
 COPY ./compose/local/django/start /start
 RUN sed -i 's/\r$//g' /start
 RUN chmod +x /start
-
-
 
 # copy application code to WORKDIR
 COPY . ${APP_HOME}
