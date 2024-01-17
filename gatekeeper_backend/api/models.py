@@ -1,6 +1,7 @@
 from uuid import uuid4
 
 from django.contrib.auth.models import AbstractUser
+from django.contrib.gis.db import models as gis_models
 from django.db import models
 
 
@@ -44,7 +45,8 @@ class Event(models.Model):
     EventDate = models.DateField(null=False)
     EventTimeStart = models.TimeField(null=False)
     EventTimeEnd = models.TimeField(null=False)
-    EventLocation = models.CharField(max_length=50, null=False)
+    EventLocation = gis_models.PointField(null=True, blank=True, srid=4326)
+    EventLocationName = models.CharField(max_length=255, null=True, blank=True)
     EventDescription = models.CharField(max_length=100, null=False)
     EventInvitedGuests = models.ManyToManyField(User, related_name="invited_to_events", blank=True)
     EventIsPrivate = models.BooleanField(default=False)

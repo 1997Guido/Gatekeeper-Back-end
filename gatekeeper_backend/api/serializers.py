@@ -1,6 +1,7 @@
 from allauth.account.adapter import DefaultAccountAdapter
 from api.models import Event, Image, User
 from dj_rest_auth.registration.serializers import RegisterSerializer
+from django.contrib.gis.geos import Point
 from rest_framework import serializers
 
 # this code serializes our model so it can be show in a readable format. you can configure which fields to serialize
@@ -79,6 +80,8 @@ class ImageSerializer(serializers.ModelSerializer):
 
 class EventSerializer(serializers.ModelSerializer):
     EventBannerURL = serializers.SerializerMethodField()
+    EventLongitude = serializers.FloatField(write_only=True)
+    EventLatitude = serializers.FloatField(write_only=True)
 
     class Meta:
         model = Event
@@ -88,7 +91,6 @@ class EventSerializer(serializers.ModelSerializer):
             "EventDate",
             "EventTimeStart",
             "EventTimeEnd",
-            "EventLocation",
             "EventDescription",
             "EventInvitedGuests",
             "EventIsPrivate",
@@ -102,6 +104,9 @@ class EventSerializer(serializers.ModelSerializer):
             "EventIsFree",
             "EventBanner",
             "EventBannerURL",
+            "EventLongitude",
+            "EventLatitude",
+            "EventLocationName",
         )
 
     def get_EventBannerURL(self, obj):
@@ -109,3 +114,12 @@ class EventSerializer(serializers.ModelSerializer):
             return obj.EventBanner.url
         else:
             return None
+
+    def create(self, validated_data):
+        longitude = validated_data.pop("EventLongitude", None)
+        latitude = validated_data.pop("EventLatitude", None)
+        if longitude is not None and latitude is not None:
+            location = Point(longitude, latitude, srid=4326)
+            validated_data["EventLocation"] = location
+        # Now you can use `validated_data` to create the Event instance
+        return super().create(validated_data)
