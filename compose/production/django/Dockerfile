@@ -15,7 +15,10 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   libpq-dev \
   # GDAL dependencies
   libgdal-dev \
-  gdal-bin
+  gdal-bin \
+  # PostGIS installation
+  postgresql-client \
+  postgis
 
 # Requirements are installed here to ensure they will be cached.
 COPY ./requirements .
@@ -41,16 +44,16 @@ RUN addgroup --system django \
 
 # Install required system dependencies
 RUN apt-get update && apt-get install --no-install-recommends -y \
-  # psycopg2 dependencies
   libpq-dev \
-  # GDAL runtime dependencies
+  gettext \
   libgdal-dev \
   gdal-bin \
-  # Translations dependencies
-  gettext \
+  # PostGIS runtime dependencies
+  postgresql-client \
+  postgis \
   # cleaning up unused files
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
-  && rm -rf /var/lib/apt/lists/*
+  && rm -rf /var/lib/apt/lists/
 
 # copy python dependency wheels from python-build-stage
 COPY --from=python-build-stage /usr/src/app/wheels  /wheels/

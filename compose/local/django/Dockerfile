@@ -8,13 +8,13 @@ ARG BUILD_ENVIRONMENT=local
 
 # Install apt packages
 RUN apt-get update && apt-get install --no-install-recommends -y \
-  # dependencies for building Python packages
   build-essential \
-  # psycopg2 dependencies
   libpq-dev \
-  # GDAL dependencies
   libgdal-dev \
-  gdal-bin
+  gdal-bin \
+  # PostGIS installation
+  postgresql-client \
+  postgis
 
 # Requirements are installed here to ensure they will be cached.
 COPY ./requirements .
@@ -39,9 +39,11 @@ WORKDIR ${APP_HOME}
 # devcontainer dependencies and utils
 RUN apt-get update && apt-get install --no-install-recommends -y \
   sudo git bash-completion nano ssh \
-  # GDAL runtime dependencies
   libgdal-dev \
-  gdal-bin
+  gdal-bin \
+  # PostGIS runtime dependencies
+  postgresql-client \
+  postgis
 
 # Create devcontainer user and add it to sudoers
 RUN groupadd --gid 1000 dev-user \
