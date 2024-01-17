@@ -63,16 +63,16 @@ class QRCodeHandler:
     def verify(self):
         event_pk = self.request.data["event"]
         qr_data = self.request.data["encryptedqrdata"]
-        
+
         # Split the QR data to get the user ID and the encrypted data
-        user_id_str, encrypted_qr_data = qr_data.split(':', 1)
+        user_id_str, encrypted_qr_data = qr_data.split(":", 1)
         user_id = int(user_id_str)
         encrypted_qr_data = encrypted_qr_data.encode("utf-8")
 
         # Use the user ID to derive the key
         user = User.objects.get(pk=user_id)
         self.key = self._derive_key(user)
-        
+
         try:
             qr_data_decrypted = self._decrypt(encrypted_qr_data).decode("utf-8")
             token_age = self._get_token_age(encrypted_qr_data)
