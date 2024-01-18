@@ -20,17 +20,6 @@ Invite guests and keep track of RSVPs
 Use QR code scanning to check in attendees
 Customize event pages with all the details your guests need to know
 
-Requirements.
-
-A modern web browser
-An internet connection
-Support
-If you have any questions or issues with the app, please contact us at [insert your contact information].
-
-Contribution
-We welcome contributions to this project, if you're interested in helping out, please check out the CONTRIBUTING.md file for more information.
-
-
 ## Local Setup Guide
 
 ### Prerequisites
