@@ -28,17 +28,17 @@ Customize event pages with all the details your guests need to know
 - PostGIS
 - GDAL
 
-### Installation Instructions
+### Installation Instructions<br>
 
-#### Install PostgreSQL and PostGIS
-On Debian-based systems:
-`sudo apt-get update`
-`sudo apt-get install postgresql postgresql-contrib`
-`sudo apt-get install postgis postgresql-14-postgis-3`
+#### Install PostgreSQL and PostGIS<br>
+On Debian-based systems:<br>
+`sudo apt-get update`<br>
+`sudo apt-get install postgresql postgresql-contrib`<br>
+`sudo apt-get install postgis postgresql-14-postgis-3`<br>
 
 
 #### Install GDAL
-For Debian-based systems:
+For Debian-based systems:<br>
 `sudo apt-get install libgdal-dev`
 
 
