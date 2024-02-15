@@ -32,17 +32,17 @@ Customize event pages with all the details your guests need to know
 
 #### Install PostgreSQL and PostGIS
 On Debian-based systems:
-sudo apt-get update
-sudo apt-get install postgresql postgresql-contrib
-sudo apt-get install postgis postgresql-12-postgis-3
+`sudo apt-get update`
+`sudo apt-get install postgresql postgresql-contrib`
+`sudo apt-get install postgis postgresql-14-postgis-3`
 
 
 #### Install GDAL
 For Debian-based systems:
-sudo apt-get install libgdal-dev
+`sudo apt-get install libgdal-dev`
 
 
 #### Install project
-pip install -r requirements/local.txt
+`pip install -r requirements/local.txt`
 Create a .env file in the root directory of the project and add the following variables:
-DATABASE_URL=postgis://username:password@localhost:5432/databasename
+`DATABASE_URL=postgis://username:password@localhost:5432/databasename`
